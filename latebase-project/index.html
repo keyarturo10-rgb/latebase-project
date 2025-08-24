@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Late Base - Gestor de Distribuidores de Café</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="homeBtn">
+                    <div class="logo-icon"></div>
+                    <div class="logo-text">Late Base</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" id="showHome"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li><a href="#" id="showAddDistributor"><i class="fas fa-plus"></i> Agregar Distribuidor</a></li>
+                        <li><a href="#" id="showAddCoffee"><i class="fas fa-coffee"></i> Agregar Café</a></li>
+                        <li><a href="#" id="showSearch"><i class="fas fa-search"></i> Buscar</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- Home View -->
+            <div id="homeView" class="tab-content active">
+                <h2 class="section-title">Distribuidores Destacados</h2>
+                <div class="distributors-grid" id="distributorsList"></div>
+                
+                <h2 class="section-title">Cafés en Destacados</h2>
+                <div id="featuredCoffees"></div>
+
+                <!-- GitHub Sync Section -->
+                <div class="github-sync">
+                    <h3 class="section-title">Sincronizar con GitHub</h3>
+                    <p>Guarda tus datos en un repositorio de GitHub para tener una copia de seguridad y acceso desde cualquier lugar.</p>
+                    <div class="sync-buttons">
+                        <button id="exportToGitHub" class="btn btn-primary">
+                            <i class="fab fa-github"></i> Exportar a GitHub
+                        </button>
+                        <button id="importFromGitHub" class="btn btn-outline">
+                            <i class="fab fa-github"></i> Importar desde GitHub
+                        </button>
+                    </div>
+                    <div id="githubStatus" style="margin-top: 15px; font-size: 14px;"></div>
+                </div>
+            </div>
+
+            <!-- Add Distributor View -->
+            <div id="addDistributorView" class="tab-content">
+                <h2 class="section-title">Agregar Nuevo Distribuidor</h2>
+                <div class="form-container">
+                    <form id="distributorForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="distributorName">Nombre del Distribuidor</label>
+                                <input type="text" id="distributorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="distributorCountry">País</label>
+                                <input type="text" id="distributorCountry" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="distributorRegion">Región</label>
+                                <input type="text" id="distributorRegion" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="distributorContact">Contacto</label>
+                                <input type="text" id="distributorContact" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="distributorDescription">Descripción</label>
+                            <textarea id="distributorDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Distribuidor</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add Coffee View -->
+            <div id="addCoffeeView" class="tab-content">
+                <h2 class="section-title">Agregar Nuevo Café</h2>
+                <div class="form-container">
+                    <form id="coffeeForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="coffeeName">Nombre del Café</label>
+                                <input type="text" id="coffeeName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeDistributor">Distribuidor</label>
+                                <select id="coffeeDistributor" required>
+                                    <option value="">Seleccionar distribuidor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="coffeeOrigin">Origen</label>
+                                <input type="text" id="coffeeOrigin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeAltitude">Altitud (msnm)</label>
+                                <input type="number" id="coffeeAltitude" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="coffeeVariety">Variedad</label>
+                                <input type="text" id="coffeeVariety" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeProcess">Proceso</label>
+                                <select id="coffeeProcess" required>
+                                    <option value="Lavado">Lavado</option>
+                                    <option value="Natural">Natural</option>
+                                    <option value="Honey">Honey</option>
+                                    <option value="Anaerobic">Anaerobic</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="coffeeRoast">Nivel de Tostión</label>
+                                <select id="coffeeRoast" required>
+                                    <option value="Clara">Clara</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Media-Oscura">Media-Oscura</option>
+                                    <option value="Oscura">Oscura</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeScore">Puntuación SCA</label>
+                                <input type="number" id="coffeeScore" step="0.1" min="0" max="100" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="coffeeNotes">Notas de Cata</label>
+                            <input type="text" id="coffeeNotes" required>
+                        </div>
+                        <h3 class="section-title">Información de Precios</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price250">Precio 250g</label>
+                                <input type="number" id="price250" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price500">Precio 500g</label>
+                                <input type="number" id="price500" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price1000">Precio 1kg</label>
+                                <input type="number" id="price1000" step="0.01" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Café</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search View -->
+            <div id="searchView" class="tab-content">
+                <h2 class="section-title">Buscar en la Base de Datos</h2>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar distribuidores, cafés, características...">
+                        <button class="search-btn" id="searchButton">Buscar</button>
+                    </div>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coffee Modal -->
+    <div class="modal" id="coffeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalCoffeeName">Nombre del Café</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="modalCoffeeContent"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <div class="logo-icon"></div>
+                        <div class="logo-text">Late Base</div>
+                    </div>
+                    <p>La base de datos definitiva para amantes del café de especialidad.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <a href="#" id="footerHome">Inicio</a>
+                    <a href="#" id="footerAddDistributor">Agregar Distribuidor</a>
+                    <a href="#" id="footerAddCoffee">Agregar Café</a>
+                    <a href="#" id="footerSearch">Búsqueda</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-envelope"></i> info@latebase.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (234) 567-8900</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Late Base - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
