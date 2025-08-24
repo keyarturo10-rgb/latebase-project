@@ -1,671 +1,615 @@
-// Data management
-const STORAGE_KEYS = {
-    DISTRIBUTORS: 'lateBase_distributors',
-    COFFEES: 'lateBase_coffees'
-};
+:root {
+    --primary-green: #2E8B57;
+    --light-green: #7FBB9E;
+    --dark-green: #1A5632;
+    --accent-green: #4CAF50;
+    --white: #FFFFFF;
+    --light-gray: #F5F7FA;
+    --medium-gray: #E2E8F0;
+    --dark-gray: #2D3748;
+    --text-gray: #4A5568;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --border-radius: 12px;
+}
 
-// GitHub repository configuration
-const GITHUB_CONFIG = {
-    USERNAME: 'keyarturo10-rgb',
-    REPO: 'latebase-project',
-    BRANCH: 'main',
-    TOKEN: ''
-};
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-// Initialize data
-function initData() {
-    if (!localStorage.getItem(STORAGE_KEYS.DISTRIBUTORS)) {
-        localStorage.setItem(STORAGE_KEYS.DISTRIBUTORS, JSON.stringify([]));
+body {
+    background-color: var(--white);
+    color: var(--text-gray);
+    line-height: 1.6;
+    font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+    padding-bottom: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', 'Helvetica', 'Arial', sans-serif;
+    color: var(--dark-gray);
+    font-weight: 600;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-green);
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    position: relative;
+}
+
+.logo-icon::before,
+.logo-icon::after {
+    content: '';
+    position: absolute;
+    border: 1px solid var(--white);
+    border-radius: 50%;
+}
+
+.logo-icon::before {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-icon::after {
+    width: 20px;
+    height: 20px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-green);
+    letter-spacing: -0.5px;
+}
+
+/* Navigation */
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 500;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+nav ul li a:hover {
+    color: var(--primary-green);
+    background-color: var(--light-gray);
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 0;
+}
+
+.section-title {
+    font-size: 26px;
+    margin-bottom: 25px;
+    color: var(--dark-gray);
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 4px;
+    background: var(--primary-green);
+    border-radius: 2px;
+}
+
+/* Forms */
+.form-container {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 35px;
+    border: 1px solid var(--medium-gray);
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--dark-gray);
+    font-size: 15px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: var(--transition);
+    font-family: 'Open Sans', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.15);
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-green);
+    color: var(--primary-green);
+}
+
+.btn-outline:hover {
+    background-color: var(--light-gray);
+    transform: translateY(-2px);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.tab {
+    padding: 14px 24px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-gray);
+    border-bottom: 3px solid transparent;
+    transition: var(--transition);
+}
+
+.tab.active {
+    color: var(--primary-green);
+    border-bottom: 3px solid var(--primary-green);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Search Container */
+.search-container {
+    background-color: var(--white);
+    padding: 30px 0;
+    margin-bottom: 35px;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    max-width: 700px;
+    margin: 0 auto 15px;
+    background: var(--white);
+    borderRadius: 50px;
+    padding: 6px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--medium-gray);
+}
+
+.search-icon {
+    padding: 0 15px;
+    color: var(--text-gray);
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 14px 8px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-btn {
+    background-color: var(--primary-green);
+    color: var(--white);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+}
+
+.search-btn:hover {
+    background-color: var(--dark-green);
+}
+
+/* Distributors Grid */
+.distributors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.distributor-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid var(--medium-gray);
+}
+
+.distributor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.distributor-header {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+    color: var(--white);
+    padding: 24px;
+}
+
+.distributor-name {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.distributor-location {
+    font-size: 14px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.distributor-body {
+    padding: 24px;
+}
+
+.coffee-count {
+    color: var(--primary-green);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.distributor-footer {
+    padding: 20px 24px;
+    border-top: 1px solid var(--medium-gray);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Coffee Details */
+.coffee-details {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid var(--medium-gray);
+}
+
+.coffee-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.coffee-name {
+    font-size: 26px;
+    color: var(--primary-green);
+}
+
+.coffee-origin {
+    font-size: 16px;
+    color: var(--text-gray);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.coffee-price {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.coffee-price span {
+    font-size: 16px;
+    font-weight: normal;
+    color: var(--text-gray);
+}
+
+.coffee-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.spec-item {
+    padding: 16px;
+    background-color: var(--light-gray);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-green);
+}
+
+.spec-label {
+    font-size: 13px;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.spec-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 90%;
+    max-width: 650px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 30px;
+    border: 1px solid var(--medium-gray);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.modal-title {
+    font-size: 26px;
+    color: var(--primary-green);
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-gray);
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    color: var(--dark-gray);
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(to right, var(--dark-green), var(--primary-green));
+    color: var(--white);
+    padding: 50px 0 20px;
+    margin-top: 80px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 35px;
+    margin-bottom: 30px;
+}
+
+.footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 18px;
+    color: var(--white);
+}
+
+.footer-section p, .footer-section a {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+    display: block;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-section a:hover {
+    color: var(--white);
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* GitHub Sync Section */
+.github-sync {
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 30px 0;
+    border: 1px solid var(--medium-gray);
+}
+
+.sync-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* GitHub Configuration Styles */
+#syncIntervalContainer {
+    display: none;
+}
+
+#autoSyncToggle:checked ~ #syncIntervalContainer {
+    display: block;
+}
+
+/* Status indicators */
+#tokenStatus, #autoSyncStatus, #connectionStatus {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--light-gray);
+    margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
     }
-    if (!localStorage.getItem(STORAGE_KEYS.COFFEES)) {
-        localStorage.setItem(STORAGE_KEYS.COFFEES, JSON.stringify([]));
-    }
-}
-
-// Get data
-function getDistributors() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.DISTRIBUTORS) || '[]');
-}
-
-function getCoffees() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.COFFEES) || '[]');
-}
-
-// Save data
-function saveDistributor(distributor) {
-    const distributors = getDistributors();
-    distributor.id = Date.now().toString();
-    distributors.push(distributor);
-    localStorage.setItem(STORAGE_KEYS.DISTRIBUTORS, JSON.stringify(distributors));
-    return distributor.id;
-}
-
-function saveCoffee(coffee) {
-    const coffees = getCoffees();
-    coffee.id = Date.now().toString();
-    coffees.push(coffee);
-    localStorage.setItem(STORAGE_KEYS.COFFEES, JSON.stringify(coffees));
-    loadCoffees();
-    return coffee.id;
-}
-
-// GitHub integration functions
-async function exportToGitHub() {
-    const token = prompt('Por favor, ingresa tu token de acceso personal de GitHub:');
-    if (!token) return;
     
-    GITHUB_CONFIG.TOKEN = token;
-    
-    const statusElement = document.getElementById('githubStatus');
-    statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exportando datos a GitHub...';
-    statusElement.style.color = 'var(--primary-green)';
-    
-    try {
-        const distributors = getDistributors();
-        const coffees = getCoffees();
-        
-        const data = {
-            distributors,
-            coffees,
-            lastUpdated: new Date().toISOString()
-        };
-        
-        // Check if file exists
-        const checkUrl = `https://api.github.com/repos/${GITHUB_CONFIG.USERNAME}/${GITHUB_CONFIG.REPO}/contents/data.json`;
-        const checkResponse = await fetch(checkUrl, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        let sha = null;
-        if (checkResponse.ok) {
-            const fileInfo = await checkResponse.json();
-            sha = fileInfo.sha;
-        }
-        
-        // Create or update file
-        const updateUrl = `https://api.github.com/repos/${GITHUB_CONFIG.USERNAME}/${GITHUB_CONFIG.REPO}/contents/data.json`;
-        const content = btoa(JSON.stringify(data, null, 2));
-        
-        const response = await fetch(updateUrl, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'Actualización de datos de Late Base',
-                content: content,
-                sha: sha,
-                branch: GITHUB_CONFIG.BRANCH
-            })
-        });
-        
-        if (response.ok) {
-            statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Datos exportados exitosamente a GitHub.';
-            statusElement.style.color = 'var(--primary-green)';
-        } else {
-            throw new Error('Error al exportar a GitHub');
-        }
-    } catch (error) {
-        console.error('Error exporting to GitHub:', error);
-        statusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error al exportar a GitHub. Verifica tu token y la configuración.';
-        statusElement.style.color = 'red';
-    }
-}
-
-async function importFromGitHub() {
-    const token = prompt('Por favor, ingresa tu token de acceso personal de GitHub:');
-    if (!token) return;
-    
-    GITHUB_CONFIG.TOKEN = token;
-    
-    const statusElement = document.getElementById('githubStatus');
-    statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importando datos desde GitHub...';
-    statusElement.style.color = 'var(--primary-green)';
-    
-    try {
-        const url = `https://api.github.com/repos/${GITHUB_CONFIG.USERNAME}/${GITHUB_CONFIG.REPO}/contents/data.json`;
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (response.ok) {
-            const fileInfo = await response.json();
-            const content = JSON.parse(atob(fileInfo.content));
-            
-            localStorage.setItem(STORAGE_KEYS.DISTRIBUTORS, JSON.stringify(content.distributors || []));
-            localStorage.setItem(STORAGE_KEYS.COFFEES, JSON.stringify(content.coffees || []));
-            
-            loadDistributors();
-            loadCoffees();
-            populateDistributorSelect();
-            
-            statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Datos importados exitosamente desde GitHub.';
-            statusElement.style.color = 'var(--primary-green)';
-        } else {
-            throw new Error('Archivo no encontrado en GitHub');
-        }
-    } catch (error) {
-        console.error('Error importing from GitHub:', error);
-        statusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error al importar desde GitHub. Verifica tu token y la configuración.';
-        statusElement.style.color = 'red';
-    }
-}
-
-// UI Management
-function showView(viewId) {
-    document.querySelectorAll('.tab-content').forEach(view => {
-        view.classList.remove('active');
-    });
-    document.getElementById(viewId).classList.add('active');
-}
-
-function loadDistributors() {
-    const distributors = getDistributors();
-    const distributorsList = document.getElementById('distributorsList');
-    
-    distributorsList.innerHTML = '';
-    
-    if (distributors.length === 0) {
-        distributorsList.innerHTML = `
-            <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                <i class="fas fa-store-slash" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>No hay distribuidores registrados</h3>
-                <p>Agrega tu primer distribuidor haciendo clic en "Agregar Distribuidor" en el menú.</p>
-            </div>
-        `;
-        return;
+    nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
     }
     
-    distributors.forEach(distributor => {
-        const distributorCoffees = getCoffees().filter(coffee => coffee.distributorId === distributor.id);
-        
-        const card = document.createElement('div');
-        card.className = 'distributor-card';
-        card.innerHTML = `
-            <div class="distributor-header">
-                <h3 class="distributor-name">${distributor.name}</h3>
-                <p class="distributor-location"><i class="fas fa-map-marker-alt"></i> ${distributor.region}, ${distributor.country}</p>
-            </div>
-            <div class="distributor-body">
-                <p class="coffee-count"><i class="fas fa-coffee"></i> ${distributorCoffees.length} variedades de café</p>
-                <p>${distributor.description || 'Sin descripción adicional.'}</p>
-            </div>
-            <div class="distributor-footer">
-                <button class="btn btn-outline"><i class="fas fa-envelope"></i> ${distributor.contact}</button>
-                <button class="btn btn-primary" data-distributor-id="${distributor.id}">Ver Cafés</button>
-            </div>
-        `;
-        
-        distributorsList.appendChild(card);
-        
-        // Add event listener to the button
-        const viewCoffeesBtn = card.querySelector('.btn-primary');
-        viewCoffeesBtn.addEventListener('click', () => {
-            showDistributorCoffees(distributor.id);
-        });
-    });
-}
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .distributor-footer {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .distributor-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .coffee-header {
+        flex-direction: column;
+    }
 
-function loadCoffees() {
-    const coffees = getCoffees();
-    const featuredCoffees = document.getElementById('featuredCoffees');
-    
-    featuredCoffees.innerHTML = '';
-    
-    if (coffees.length === 0) {
-        featuredCoffees.innerHTML = `
-            <div class="empty-state" style="text-align: center; padding: 40px;">
-                <i class="fas fa-coffee" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>No hay cafés registrados</h3>
-                <p>Agrega tu primer café haciendo clic en "Agregar Café" en el menú.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Show only 3 featured coffees
-    const featured = coffees.slice(0, 3);
-    
-    featured.forEach(coffee => {
-        const distributor = getDistributors().find(d => d.id === coffee.distributorId);
-        const coffeeEl = document.createElement('div');
-        coffeeEl.className = 'coffee-details';
-        coffeeEl.innerHTML = `
-            <div class="coffee-header">
-                <div>
-                    <h3 class="coffee-name">${coffee.name}</h3>
-                    <p class="coffee-origin"><i class="fas fa-map-marker-alt"></i> ${coffee.origin} · ${distributor ? distributor.name : 'Distribuidor desconocido'}</p>
-                </div>
-                <div class="coffee-price">$${coffee.price500} <span>/ 500g</span></div>
-            </div>
-            
-            <div class="coffee-specs">
-                <div class="spec-item">
-                    <div class="spec-label">Puntuación SCA</div>
-                    <div class="spec-value">${coffee.score} puntos</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">Altitud</div>
-                    <div class="spec-value">${coffee.altitude} msnm</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">Variedad</div>
-                    <div class="spec-value">${coffee.variety}</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">Proceso</div>
-                    <div class="spec-value">${coffee.process}</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">Notas de Cata</div>
-                    <div class="spec-value">${coffee.notes}</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">Tostión</div>
-                    <div class="spec-value">${coffee.roastLevel}</div>
-                </div>
-            </div>
-            
-            <div class="pricing-table">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--medium-gray);">Cantidad</th>
-                            <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--medium-gray);">Precio Unitario</th>
-                            <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--medium-gray);">Precio Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">250g</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">$${coffee.price250}/100g</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">$${coffee.price250}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">500g</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">$${(coffee.price500 / 5).toFixed(2)}/100g</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--medium-gray);">$${coffee.price500}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px;">1kg</td>
-                            <td style="padding: 12px;">$${(coffee.price1000 / 10).toFixed(2)}/100g</td>
-                            <td style="padding: 12px;">$${coffee.price1000}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        `;
-        
-        featuredCoffees.appendChild(coffeeEl);
-    });
-}
-
-function populateDistributorSelect() {
-    const select = document.getElementById('coffeeDistributor');
-    const distributors = getDistributors();
-    
-    // Clear existing options except the first one
-    while (select.options.length > 1) {
-        select.remove(1);
-    }
-    
-    // Add distributor options
-    distributors.forEach(distributor => {
-        const option = document.createElement('option');
-        option.value = distributor.id;
-        option.textContent = `${distributor.name} (${distributor.country})`;
-        select.appendChild(option);
-    });
-}
-
-function showDistributorCoffees(distributorId) {
-    const coffees = getCoffees().filter(coffee => coffee.distributorId === distributorId);
-    const distributor = getDistributors().find(d => d.id === distributorId);
-    
-    const resultsDiv = document.getElementById('searchResults');
-    resultsDiv.innerHTML = '';
-    
-    if (coffees.length === 0) {
-        resultsDiv.innerHTML = `
-            <div class="empty-state" style="text-align: center; padding: 40px;">
-                <i class="fas fa-coffee" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>No hay cafés para este distribuidor</h3>
-                <p>Este distribuidor no tiene cafés registrados en la base de datos.</p>
-            </div>
-        `;
-    } else {
-        resultsDiv.innerHTML = `<h2 class="section-title">Cafés de ${distributor.name}</h2>`;
-        
-        coffees.forEach(coffee => {
-            const coffeeEl = document.createElement('div');
-            coffeeEl.className = 'coffee-details';
-            coffeeEl.innerHTML = `
-                <div class="coffee-header">
-                    <div>
-                        <h3 class="coffee-name">${coffee.name}</h3>
-                        <p class="coffee-origin"><i class="fas fa-map-marker-alt"></i> ${coffee.origin}</p>
-                    </div>
-                    <div class="coffee-price">$${coffee.price500} <span>/ 500g</span></div>
-                </div>
-                
-                <div class="coffee-specs">
-                    <div class="spec-item">
-                        <div class="spec-label">Puntuación SCA</div>
-                        <div class="spec-value">${coffee.score} puntos</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Altitud</div>
-                        <div class="spec-value">${coffee.altitude} msnm</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Variedad</div>
-                        <div class="spec-value">${coffee.variety}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Proceso</div>
-                        <div class="spec-value">${coffee.process}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Notas de Cata</div>
-                        <div class="spec-value">${coffee.notes}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Tostión</div>
-                        <div class="spec-value">${coffee.roastLevel}</div>
-                    </div>
-                </div>
-            `;
-            
-            resultsDiv.appendChild(coffeeEl);
-        });
-    }
-    
-    showView('searchView');
-}
-
-function search(query) {
-    const resultsDiv = document.getElementById('searchResults');
-    resultsDiv.innerHTML = '';
-    
-    if (!query) {
-        resultsDiv.innerHTML = `
-            <div class="empty-state" style="text-align: center; padding: 40px;">
-                <i class="fas fa-search" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>Ingresa un término de búsqueda</h3>
-                <p>Utiliza el campo de búsqueda para encontrar distribuidores o cafés.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    const lowerQuery = query.toLowerCase();
-    const distributors = getDistributors();
-    const coffees = getCoffees();
-    
-    // Search distributors
-    const distributorResults = distributors.filter(distributor => 
-        distributor.name.toLowerCase().includes(lowerQuery) ||
-        distributor.country.toLowerCase().includes(lowerQuery) ||
-        distributor.region.toLowerCase().includes(lowerQuery) ||
-        (distributor.description && distributor.description.toLowerCase().includes(lowerQuery))
-    );
-    
-    // Search coffees
-    const coffeeResults = coffees.filter(coffee =>
-        coffee.name.toLowerCase().includes(lowerQuery) ||
-        coffee.origin.toLowerCase().includes(lowerQuery) ||
-        coffee.variety.toLowerCase().includes(lowerQuery) ||
-        coffee.process.toLowerCase().includes(lowerQuery) ||
-        coffee.notes.toLowerCase().includes(lowerQuery)
-    );
-    
-    if (distributorResults.length === 0 && coffeeResults.length === 0) {
-        resultsDiv.innerHTML = `
-            <div class="empty-state" style="text-align: center; padding: 40px;">
-                <i class="fas fa-search" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>No se encontraron resultados</h3>
-                <p>Intenta con otros términos de búsqueda.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Display distributor results
-    if (distributorResults.length > 0) {
-        resultsDiv.innerHTML += `<h2 class="section-title">Distribuidores (${distributorResults.length})</h2>`;
-        
-        distributorResults.forEach(distributor => {
-            const distributorCoffees = coffees.filter(coffee => coffee.distributorId === distributor.id);
-            
-            const card = document.createElement('div');
-            card.className = 'distributor-card';
-            card.innerHTML = `
-                <div class="distributor-header">
-                    <h3 class="distributor-name">${distributor.name}</h3>
-                    <p class="distributor-location"><i class="fas fa-map-marker-alt"></i> ${distributor.region}, ${distributor.country}</p>
-                </div>
-                <div class="distributor-body">
-                    <p class="coffee-count"><i class="fas fa-coffee"></i> ${distributorCoffees.length} variedades de café</p>
-                    <p>${distributor.description || 'Sin descripción adicional.'}</p>
-                </div>
-                <div class="distributor-footer">
-                    <button class="btn btn-outline"><i class="fas fa-envelope"></i> ${distributor.contact}</button>
-                    <button class="btn btn-primary" data-distributor-id="${distributor.id}">Ver Cafés</button>
-                </div>
-            `;
-            
-            resultsDiv.appendChild(card);
-            
-            // Add event listener to the button
-            const viewCoffeesBtn = card.querySelector('.btn-primary');
-            viewCoffeesBtn.addEventListener('click', () => {
-                showDistributorCoffees(distributor.id);
-            });
-        });
-    }
-    
-    // Display coffee results
-    if (coffeeResults.length > 0) {
-        resultsDiv.innerHTML += `<h2 class="section-title">Cafés (${coffeeResults.length})</h2>`;
-        
-        coffeeResults.forEach(coffee => {
-            const distributor = distributors.find(d => d.id === coffee.distributorId);
-            const coffeeEl = document.createElement('div');
-            coffeeEl.className = 'coffee-details';
-            coffeeEl.innerHTML = `
-                <div class="coffee-header">
-                    <div>
-                        <h3 class="coffee-name">${coffee.name}</h3>
-                        <p class="coffee-origin"><i class="fas fa-map-marker-alt"></i> ${coffee.origin} · ${distributor ? distributor.name : 'Distribuidor desconocido'}</p>
-                    </div>
-                    <div class="coffee-price">$${coffee.price500} <span>/ 500g</span></div>
-                </div>
-                
-                <div class="coffee-specs">
-                    <div class="spec-item">
-                        <div class="spec-label">Puntuación SCA</div>
-                        <div class="spec-value">${coffee.score} puntos</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Altitud</div>
-                        <div class="spec-value">${coffee.altitude} msnm</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Variedad</div>
-                        <div class="spec-value">${coffee.variety}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Proceso</div>
-                        <div class="spec-value">${coffee.process}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Notas de Cata</div>
-                        <div class="spec-value">${coffee.notes}</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label">Tostión</div>
-                        <div class="spec-value">${coffee.roastLevel}</div>
-                    </div>
-                </div>
-            `;
-            
-            resultsDiv.appendChild(coffeeEl);
-        });
+    .sync-buttons {
+        flex-direction: column;
     }
 }
-
-// Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize data
-    initData();
-    
-    // Load initial data
-    loadDistributors();
-    loadCoffees();
-    populateDistributorSelect();
-    
-    // Set up event listeners
-    document.getElementById('showHome').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('homeView');
-        loadDistributors();
-        loadCoffees();
-    });
-    
-    document.getElementById('showAddDistributor').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('addDistributorView');
-    });
-    
-    document.getElementById('showAddCoffee').addEventListener('click', function(e) {
-        e.preventDefault();
-        populateDistributorSelect();
-        showView('addCoffeeView');
-    });
-    
-    document.getElementById('showSearch').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('searchView');
-        document.getElementById('searchInput').value = '';
-        document.getElementById('searchResults').innerHTML = `
-            <div class="empty-state" style="text-align: center; padding: 40px;">
-                <i class="fas fa-search" style="font-size: 48px; color: var(--medium-gray); margin-bottom: 15px;"></i>
-                <h3>Buscar en la base de datos</h3>
-                <p>Utiliza el campo de búsqueda para encontrar distribuidores o cafés.</p>
-            </div>
-        `;
-    });
-    
-    document.getElementById('homeBtn').addEventListener('click', function() {
-        showView('homeView');
-        loadDistributors();
-        loadCoffees();
-    });
-    
-    // Footer navigation
-    document.getElementById('footerHome').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('homeView');
-        loadDistributors();
-        loadCoffees();
-    });
-    
-    document.getElementById('footerAddDistributor').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('addDistributorView');
-    });
-    
-    document.getElementById('footerAddCoffee').addEventListener('click', function(e) {
-        e.preventDefault();
-        populateDistributorSelect();
-        showView('addCoffeeView');
-    });
-    
-    document.getElementById('footerSearch').addEventListener('click', function(e) {
-        e.preventDefault();
-        showView('searchView');
-    });
-    
-    // GitHub sync buttons
-    document.getElementById('exportToGitHub').addEventListener('click', exportToGitHub);
-    document.getElementById('importFromGitHub').addEventListener('click', importFromGitHub);
-    
-    // Form submissions
-    document.getElementById('distributorForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const distributor = {
-            name: document.getElementById('distributorName').value,
-            country: document.getElementById('distributorCountry').value,
-            region: document.getElementById('distributorRegion').value,
-            contact: document.getElementById('distributorContact').value,
-            description: document.getElementById('distributorDescription').value
-        };
-        
-        saveDistributor(distributor);
-        populateDistributorSelect();
-        
-        // Reset form
-        this.reset();
-        
-        // Show success message
-        alert('Distribuidor agregado correctamente!');
-        
-        // Go back to home
-        showView('homeView');
-        loadDistributors();
-    });
-    
-    document.getElementById('coffeeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const coffee = {
-            distributorId: document.getElementById('coffeeDistributor').value,
-            name: document.getElementById('coffeeName').value,
-            origin: document.getElementById('coffeeOrigin').value,
-            altitude: document.getElementById('coffeeAltitude').value,
-            variety: document.getElementById('coffeeVariety').value,
-            process: document.getElementById('coffeeProcess').value,
-            roastLevel: document.getElementById('coffeeRoast').value,
-            score: document.getElementById('coffeeScore').value,
-            notes: document.getElementById('coffeeNotes').value,
-            price250: document.getElementById('price250').value,
-            price500: document.getElementById('price500').value,
-            price1000: document.getElementById('price1000').value
-        };
-        
-        saveCoffee(coffee);
-        
-        // Reset form
-        this.reset();
-        
-        // Show success message
-        alert('Café agregado correctamente!');
-        
-        // Go back to home
-        showView('homeView');
-        loadDistributors();
-        loadCoffees();
-    });
-    
-    // Search functionality
-    document.getElementById('searchButton').addEventListener('click', function() {
-        const query = document.getElementById('searchInput').value;
-        search(query);
-    });
-    
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const query = document.getElementById('searchInput').value;
-            search(query);
-        }
-    });
-});
