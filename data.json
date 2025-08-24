@@ -5,10 +5,56 @@
       "country": "Venezuela ",
       "region": "Caracas",
       "contact": "+584242625441 +584123095712",
-      "description": "Tostaduria de café especial",
+      "description": "Tostaduria de cafÃ© especial",
       "id": "1756068176267"
     }
   ],
-  "coffees": [],
-  "lastUpdated": "2025-08-24T20:43:20.809Z"
+  "coffees": [
+    {
+      "distributorId": "1756068176267",
+      "name": "Especial Aragua ",
+      "origin": "Colonia Tovar - Aragua (Venezuela)",
+      "altitude": "1800",
+      "variety": "Tyipica",
+      "process": "Lavado",
+      "roastLevel": "Media",
+      "score": "80",
+      "notes": "NA",
+      "price250": "6",
+      "price500": "12",
+      "price1000": "25",
+      "id": "1756068570175"
+    },
+    {
+      "distributorId": "1756068176267",
+      "name": "Amadahy - Catuai Amarillo",
+      "origin": "Santa Cruz de Mora - Mérida (Venezuela)",
+      "altitude": "1800",
+      "variety": "Catuai Amarillo",
+      "process": "Lavado",
+      "roastLevel": "Media",
+      "score": "80",
+      "notes": "NA",
+      "price250": "6",
+      "price500": "12",
+      "price1000": "24",
+      "id": "1756068762524"
+    },
+    {
+      "distributorId": "1756068176267",
+      "name": "Amadahy - Caturra",
+      "origin": "Humocaro - Lara (Venezuela)",
+      "altitude": "1400",
+      "variety": "Caturra",
+      "process": "Lavado",
+      "roastLevel": "Media",
+      "score": "80",
+      "notes": "NA",
+      "price250": "6",
+      "price500": "12",
+      "price1000": "24",
+      "id": "1756070306606"
+    }
+  ],
+  "lastUpdated": "2025-08-24T21:25:11.580Z"
 }
