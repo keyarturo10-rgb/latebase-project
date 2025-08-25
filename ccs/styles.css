@@ -3,12 +3,10 @@
     --secondary-green: #3CB371;
     --light-green: #F0FFF0;
     --dark-green: #006400;
-    --sand: #F5F5DC;
-    --stone: #E5E5E5;
-    --gray-light: #f9f9f9;
+    --gray-light: #f5f5f5;
     --gray: #777;
     --gray-dark: #333;
-    --shadow: 0 4px 8px rgba(0,0,0,0.05);
+    --shadow: 0 4px 8px rgba(0,0,0,0.1);
     --transition: all 0.3s ease;
 }
 
@@ -20,7 +18,7 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    background-color: white; /* Cambiado a blanco según solicitud */
+    background-color: white;
     color: var(--gray-dark);
     line-height: 1.6;
 }
@@ -28,7 +26,6 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     color: var(--dark-green);
-    font-weight: 500;
 }
 
 .container {
@@ -38,7 +35,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 20px;
 }
 
-/* Header */
 header {
     background-color: white;
     color: var(--dark-green);
@@ -92,7 +88,6 @@ nav a:hover, nav a.active {
     background-color: rgba(46, 139, 87, 0.1);
 }
 
-/* Main content */
 main {
     padding: 2rem 0;
     min-height: calc(100vh - 180px);
@@ -101,12 +96,9 @@ main {
 .section-title {
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--primary-green);
-    font-weight: 300;
-    letter-spacing: 1px;
+    border-bottom: 2px solid var(--primary-green);
 }
 
-/* Search bar */
 .search-bar {
     display: flex;
     margin-bottom: 1.5rem;
@@ -119,7 +111,6 @@ main {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-family: 'Open Sans', sans-serif;
-    background-color: white;
 }
 
 .search-bar button {
@@ -136,7 +127,6 @@ main {
     background-color: var(--dark-green);
 }
 
-/* Cards grid */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -155,7 +145,7 @@ main {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
 .card-header {
@@ -176,7 +166,6 @@ main {
     border-top: 1px solid #eee;
 }
 
-/* Buttons */
 .btn {
     padding: 10px 15px;
     border: none;
@@ -214,7 +203,6 @@ main {
     background-color: #bd2130;
 }
 
-/* Forms */
 .form-group {
     margin-bottom: 1.2rem;
 }
@@ -231,7 +219,6 @@ main {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-family: 'Open Sans', sans-serif;
-    background-color: white;
 }
 
 .form-actions {
@@ -241,7 +228,6 @@ main {
     margin-top: 1.5rem;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -288,7 +274,6 @@ main {
     color: var(--gray);
 }
 
-/* GitHub config */
 .github-config {
     background-color: var(--light-green);
     padding: 20px;
@@ -325,25 +310,6 @@ main {
     background-color: #dc3545;
 }
 
-/* Tabs */
-.tabs {
-    display: flex;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #ddd;
-}
-
-.tab {
-    padding: 12px 25px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 500;
-}
-
-.tab.active {
-    border-bottom: 3px solid var(--primary-green);
-    color: var(--primary-green);
-}
-
 .tab-content {
     display: none;
 }
@@ -352,7 +318,6 @@ main {
     display: block;
 }
 
-/* Coffee counter */
 .coffee-count {
     background-color: var(--primary-green);
     color: white;
@@ -365,7 +330,6 @@ main {
     font-size: 0.8rem;
 }
 
-/* Footer */
 footer {
     background-color: white;
     color: var(--gray-dark);
@@ -375,7 +339,10 @@ footer {
     border-top: 1px solid #ddd;
 }
 
-/* Responsive */
+#sync-interval-container {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
@@ -400,5 +367,9 @@ footer {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
+    }
+    
+    .search-bar {
+        flex-direction: column;
     }
 }
