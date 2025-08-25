@@ -1,14 +1,4 @@
 {
-  "distributors": [
-    {
-      "id": 1,
-      "name": "Amadahy",
-      "contact": "Juan",
-      "email": "N@A",
-      "phone": "04242625441",
-      "region": "sur",
-      "coffees": []
-    }
-  ],
+  "distributors": [],
   "coffees": []
 }
