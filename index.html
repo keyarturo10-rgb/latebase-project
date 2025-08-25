@@ -5,302 +5,258 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Late Base - Gestor de Distribuidores de Café</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo" id="homeBtn">
-                    <div class="logo-icon">
-                        <!-- Círculos concéntricos minimalistas -->
-                    </div>
-                    <div class="logo-text">Late Base</div>
+                <div class="logo">
+                    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Surcos de jardín zen -->
+                        <path d="M10,30 Q25,10 40,30 T70,30 T100,30" stroke="#2E8B57" stroke-width="3" fill="none" />
+                        <path d="M10,45 Q25,25 40,45 T70,45 T100,45" stroke="#2E8B57" stroke-width="3" fill="none" />
+                        <path d="M10,60 Q25,40 40,60 T70,60 T100,60" stroke="#2E8B57" stroke-width="3" fill="none" />
+                        <path d="M10,75 Q25,55 40,75 T70,75 T100,75" stroke="#2E8B57" stroke-width="3" fill="none" />
+                        <!-- Símbolo de café en el centro -->
+                        <circle cx="50" cy="52" r="8" fill="#2E8B57" opacity="0.8" />
+                    </svg>
+                    <h1>Late Base</h1>
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#" id="showHome"><i class="fas fa-home"></i> Inicio</a></li>
-                        <li><a href="#" id="showAddDistributor"><i class="fas fa-plus"></i> Agregar Distribuidor</a></li>
-                        <li><a href="#" id="showAddCoffee"><i class="fas fa-coffee"></i> Agregar Café</a></li>
-                        <li><a href="#" id="showSearch"><i class="fas fa-search"></i> Buscar</a></li>
-                        <li><a href="#" id="showGitHubConfig"><i class="fab fa-github"></i> Configurar GitHub</a></li>
+                        <li><a href="#" class="active" data-tab="distributors">Distribuidores</a></li>
+                        <li><a href="#" data-tab="coffees">Cafés</a></li>
+                        <li><a href="#" data-tab="github-config">Configuración GitHub</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="main-content">
-            <!-- Home View -->
-            <div id="homeView" class="tab-content active">
-                <h2 class="section-title">Distribuidores Destacados</h2>
-                
-                <div class="distributors-grid" id="distributorsList">
-                    <!-- Distributors will be loaded here -->
-                </div>
-                
-                <h2 class="section-title">Cafés en Destacados</h2>
-                <div id="featuredCoffees">
-                    <!-- Featured coffees will be loaded here -->
-                </div>
-
-                <!-- GitHub Sync Section -->
-                <div class="github-sync">
-                    <h3 class="section-title">Sincronizar con GitHub</h3>
-                    <p>Guarda tus datos en un repositorio de GitHub para tener una copia de seguridad y acceso desde cualquier lugar.</p>
-                    <div class="sync-buttons">
-                        <button id="exportToGitHub" class="btn btn-primary">
-                            <i class="fab fa-github"></i> Exportar a GitHub
-                        </button>
-                        <button id="importFromGitHub" class="btn btn-outline">
-                            <i class="fab fa-github"></i> Importar desde GitHub
-                        </button>
+    <main class="container">
+        <!-- Distributors Section -->
+        <section id="distributors" class="tab-content active">
+            <h2 class="section-title">Gestión de Distribuidores</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="search-distributors" placeholder="Buscar distribuidores...">
+                <button id="btn-search-distributors"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+            
+            <div class="github-config">
+                <div class="github-config-header">
+                    <div class="github-status">
+                        <span class="status-indicator status-disconnected" id="github-status"></span>
+                        <span id="github-status-text">No conectado a GitHub</span>
                     </div>
-                    <div id="githubStatus" style="margin-top: 15px; font-size: 14px;"></div>
+                    <button class="btn btn-primary" id="btn-sync-now">Sincronizar ahora</button>
                 </div>
             </div>
-
-            <!-- Add Distributor View -->
-            <div id="addDistributorView" class="tab-content">
-                <h2 class="section-title">Agregar Nuevo Distribuidor</h2>
-                
-                <div class="form-container">
-                    <form id="distributorForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="distributorName">Nombre del Distribuidor</label>
-                                <input type="text" id="distributorName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="distributorCountry">País</label>
-                                <input type="text" id="distributorCountry" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="distributorRegion">Región</label>
-                                <input type="text" id="distributorRegion" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="distributorContact">Contacto</label>
-                                <input type="text" id="distributorContact" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="distributorDescription">Descripción</label>
-                            <textarea id="distributorDescription" rows="3"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Guardar Distribuidor</button>
-                    </form>
-                </div>
+            
+            <button class="btn btn-primary" id="btn-add-distributor"><i class="fas fa-plus"></i> Agregar Distribuidor</button>
+            
+            <div class="cards-grid" id="distributors-grid">
+                <!-- Distributors cards will be generated here -->
             </div>
+        </section>
 
-            <!-- Add Coffee View -->
-            <div id="addCoffeeView" class="tab-content">
-                <h2 class="section-title">Agregar Nuevo Café</h2>
-                
-                <div class="form-container">
-                    <form id="coffeeForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="coffeeName">Nombre del Café</label>
-                                <input type="text" id="coffeeName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="coffeeDistributor">Distribuidor</label>
-                                <select id="coffeeDistributor" required>
-                                    <option value="">Seleccionar distribuidor</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="coffeeOrigin">Origen</label>
-                                <input type="text" id="coffeeOrigin" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="coffeeAltitude">Altitud (msnm)</label>
-                                <input type="number" id="coffeeAltitude" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="coffeeVariety">Variedad</label>
-                                <input type="text" id="coffeeVariety" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="coffeeProcess">Proceso</label>
-                                <select id="coffeeProcess" required>
-                                    <option value="Lavado">Lavado</option>
-                                    <option value="Natural">Natural</option>
-                                    <option value="Honey">Honey</option>
-                                    <option value="Anaerobic">Anaerobic</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="coffeeRoast">Nivel de Tostión</label>
-                                <select id="coffeeRoast" required>
-                                    <option value="Clara">Clara</option>
-                                    <option value="Media">Media</option>
-                                    <option value="Media-Oscura">Media-Oscura</option>
-                                    <option value="Oscura">Oscura</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="coffeeScore">Puntuación SCA</label>
-                                <input type="number" id="coffeeScore" step="0.1" min="0" max="100" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="coffeeNotes">Notas de Cata</label>
-                            <input type="text" id="coffeeNotes" required>
-                        </div>
-                        
-                        <h3 class="section-title">Información de Precios</h3>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="price250">Precio 250g</label>
-                                <input type="number" id="price250" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="price500">Precio 500g</label>
-                                <input type="number" id="price500" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="price1000">Precio 1kg</label>
-                                <input type="number" id="price1000" step="0.01" required>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Guardar Café</button>
-                    </form>
-                </div>
+        <!-- Coffees Section -->
+        <section id="coffees" class="tab-content">
+            <h2 class="section-title">Gestión de Cafés</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="search-coffees" placeholder="Buscar cafés...">
+                <button id="btn-search-coffees"><i class="fas fa-search"></i> Buscar</button>
             </div>
+            
+            <button class="btn btn-primary" id="btn-add-coffee"><i class="fas fa-plus"></i> Agregar Café</button>
+            
+            <div class="cards-grid" id="coffees-grid">
+                <!-- Coffee cards will be generated here -->
+            </div>
+        </section>
 
-            <!-- Search View -->
-            <div id="searchView" class="tab-content">
-                <h2 class="section-title">Buscar en la Base de Datos</h2>
-                
-                <div class="search-container">
-                    <div class="search-bar">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar distribuidores, cafés, características...">
-                        <button class="search-btn" id="searchButton">Buscar</button>
-                    </div>
+        <!-- GitHub Configuration Section -->
+        <section id="github-config" class="tab-content">
+            <h2 class="section-title">Configuración de GitHub</h2>
+            
+            <form id="github-config-form">
+                <div class="form-group">
+                    <label for="github-user">Usuario de GitHub</label>
+                    <input type="text" id="github-user" class="form-control" value="keyarturo10-rgb" required>
                 </div>
                 
-                <div id="searchResults">
-                    <!-- Search results will be displayed here -->
+                <div class="form-group">
+                    <label for="github-repo">Repositorio</label>
+                    <input type="text" id="github-repo" class="form-control" value="latebase-project" required>
                 </div>
-            </div>
+                
+                <div class="form-group">
+                    <label for="github-branch">Rama</label>
+                    <input type="text" id="github-branch" class="form-control" value="main" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="github-token">Token de acceso</label>
+                    <input type="password" id="github-token" class="form-control" required>
+                    <small>Necesitas generar un token personal en GitHub con permisos de repositorio</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="github-auto-sync"> Sincronización automática
+                    </label>
+                </div>
+                
+                <div class="form-group" id="sync-interval-container" style="display: none;">
+                    <label for="sync-interval">Intervalo de sincronización (minutos)</label>
+                    <input type="number" id="sync-interval" class="form-control" min="1" max="60" value="5">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-test-connection">Probar conexión</button>
+                    <button type="submit" class="btn btn-primary">Guardar configuración</button>
+                </div>
+            </form>
+        </section>
+    </main>
 
-            <!-- GitHub Configuration View -->
-            <div id="githubConfigView" class="tab-content">
-                <h2 class="section-title">Configuración de GitHub</h2>
-                
-                <div class="form-container">
-                    <div class="form-group">
-                        <label for="githubUsername">Usuario de GitHub</label>
-                        <input type="text" id="githubUsername" value="keyarturo10-rgb" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="githubRepo">Repositorio</label>
-                        <input type="text" id="githubRepo" value="latebase-project" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="githubBranch">Rama</label>
-                        <input type="text" id="githubBranch" value="main" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="githubToken">Token de Acceso Personal</label>
-                        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required>
-                        <small>Crea un token en GitHub con permisos de repositorio (repo). <a href="https://github.com/settings/tokens" target="_blank">Generar token</a></small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="autoSyncToggle">
-                            <input type="checkbox" id="autoSyncToggle"> Sincronización automática
-                        </label>
-                        <small>Los cambios se guardarán automáticamente en GitHub</small>
-                    </div>
-                    
-                    <div class="form-group" id="syncIntervalContainer" style="display: none;">
-                        <label for="syncInterval">Intervalo de sincronización (minutos)</label>
-                        <input type="number" id="syncInterval" min="1" max="60" value="5">
-                    </div>
-                    
-                    <div class="form-group">
-                        <p id="tokenStatus">❌ Token no configurado</p>
-                        <p id="autoSyncStatus">❌ Sincronización automática desactivada</p>
-                    </div>
-                    
-                    <button id="testConnection" class="btn btn-outline">Probar Conexión</button>
-                    <div id="connectionStatus" style="margin-top: 10px;"></div>
-                    
-                    <div style="margin-top: 20px;">
-                        <button id="saveGitHubConfig" class="btn btn-primary">Guardar Configuración</button>
-                    </div>
-                </div>
+    <!-- Distributor Modal -->
+    <div class="modal" id="distributor-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="distributor-modal-title">Agregar Distribuidor</h2>
+                <button class="close-modal">&times;</button>
             </div>
+            <form id="distributor-form">
+                <input type="hidden" id="distributor-id">
+                <div class="form-group">
+                    <label for="distributor-name">Nombre</label>
+                    <input type="text" id="distributor-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="distributor-country">País</label>
+                    <input type="text" id="distributor-country" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="distributor-region">Región</label>
+                    <input type="text" id="distributor-region" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="distributor-contact">Contacto</label>
+                    <input type="text" id="distributor-contact" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="distributor-description">Descripción</label>
+                    <textarea id="distributor-description" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Coffee Modal -->
-    <div class="modal" id="coffeeModal">
+    <div class="modal" id="coffee-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="modalCoffeeName">Nombre del Café</h2>
+                <h2 id="coffee-modal-title">Agregar Café</h2>
                 <button class="close-modal">&times;</button>
             </div>
-            <div id="modalCoffeeContent">
-                <!-- Coffee details will be loaded here -->
-            </div>
+            <form id="coffee-form">
+                <input type="hidden" id="coffee-id">
+                <div class="form-group">
+                    <label for="coffee-distributor">Distribuidor</label>
+                    <select id="coffee-distributor" class="form-control" required>
+                        <option value="">Seleccionar distribuidor</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-name">Nombre</label>
+                    <input type="text" id="coffee-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-origin">Origen</label>
+                    <input type="text" id="coffee-origin" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-altitude">Altitud (msnm)</label>
+                    <input type="number" id="coffee-altitude" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-variety">Variedad</label>
+                    <input type="text" id="coffee-variety" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-process">Proceso</label>
+                    <select id="coffee-process" class="form-control" required>
+                        <option value="Lavado">Lavado</option>
+                        <option value="Natural">Natural</option>
+                        <option value="Honey">Honey</option>
+                        <option value="Anaerobic">Anaeróbico</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-roast">Nivel de tostión</label>
+                    <select id="coffee-roast" class="form-control" required>
+                        <option value="Claro">Claro</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Medio-Oscuro">Medio-Oscuro</option>
+                        <option value="Oscuro">Oscuro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-sca">Puntuación SCA (0-100)</label>
+                    <input type="number" id="coffee-sca" class="form-control" min="0" max="100" step="0.1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-tasting">Notas de cata</label>
+                    <textarea id="coffee-tasting" class="form-control" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-price-250">Precio 250g (€)</label>
+                    <input type="number" id="coffee-price-250" class="form-control" min="0" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-price-500">Precio 500g (€)</label>
+                    <input type="number" id="coffee-price-500" class="form-control" min="0" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-price-1kg">Precio 1kg (€)</label>
+                    <input type="number" id="coffee-price-1kg" class="form-control" min="0" step="0.01" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="logo">
-                        <div class="logo-icon">
-                            <!-- Círculos concéntricos minimalistas -->
-                        </div>
-                        <div class="logo-text">Late Base</div>
-                    </div>
-                    <p>La base de datos definitiva para amantes del café de especialidad.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <a href="#" id="footerHome">Inicio</a>
-                    <a href="#" id="footerAddDistributor">Agregar Distribuidor</a>
-                    <a href="#" id="footerAddCoffee">Agregar Café</a>
-                    <a href="#" id="footerSearch">Búsqueda</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p><i class="fas fa-envelope"></i> info@latebase.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (234) 567-8900</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 Late Base - Todos los derechos reservados</p>
-            </div>
+            <p>Late Base - Gestor de Distribuidores de Café &copy; 2023</p>
         </div>
     </footer>
 
