@@ -14,12 +14,10 @@
             <div class="header-content">
                 <div class="logo">
                     <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Surcos de jardín zen -->
                         <path d="M10,30 Q25,10 40,30 T70,30 T100,30" stroke="#2E8B57" stroke-width="3" fill="none" />
                         <path d="M10,45 Q25,25 40,45 T70,45 T100,45" stroke="#2E8B57" stroke-width="3" fill="none" />
                         <path d="M10,60 Q25,40 40,60 T70,60 T100,60" stroke="#2E8B57" stroke-width="3" fill="none" />
                         <path d="M10,75 Q25,55 40,75 T70,75 T100,75" stroke="#2E8B57" stroke-width="3" fill="none" />
-                        <!-- Símbolo de café en el centro -->
                         <circle cx="50" cy="52" r="8" fill="#2E8B57" opacity="0.8" />
                     </svg>
                     <h1>Late Base</h1>
@@ -36,7 +34,6 @@
     </header>
 
     <main class="container">
-        <!-- Distributors Section -->
         <section id="distributors" class="tab-content active">
             <h2 class="section-title">Gestión de Distribuidores</h2>
             
@@ -57,12 +54,9 @@
             
             <button class="btn btn-primary" id="btn-add-distributor"><i class="fas fa-plus"></i> Agregar Distribuidor</button>
             
-            <div class="cards-grid" id="distributors-grid">
-                <!-- Distributors cards will be generated here -->
-            </div>
+            <div class="cards-grid" id="distributors-grid"></div>
         </section>
 
-        <!-- Coffees Section -->
         <section id="coffees" class="tab-content">
             <h2 class="section-title">Gestión de Cafés</h2>
             
@@ -73,12 +67,9 @@
             
             <button class="btn btn-primary" id="btn-add-coffee"><i class="fas fa-plus"></i> Agregar Café</button>
             
-            <div class="cards-grid" id="coffees-grid">
-                <!-- Coffee cards will be generated here -->
-            </div>
+            <div class="cards-grid" id="coffees-grid"></div>
         </section>
 
-        <!-- GitHub Configuration Section -->
         <section id="github-config" class="tab-content">
             <h2 class="section-title">Configuración de GitHub</h2>
             
@@ -110,7 +101,7 @@
                     </label>
                 </div>
                 
-                <div class="form-group" id="sync-interval-container" style="display: none;">
+                <div class="form-group" id="sync-interval-container">
                     <label for="sync-interval">Intervalo de sincronización (minutos)</label>
                     <input type="number" id="sync-interval" class="form-control" min="1" max="60" value="5">
                 </div>
@@ -123,7 +114,6 @@
         </section>
     </main>
 
-    <!-- Distributor Modal -->
     <div class="modal" id="distributor-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -165,7 +155,6 @@
         </div>
     </div>
 
-    <!-- Coffee Modal -->
     <div class="modal" id="coffee-modal">
         <div class="modal-content">
             <div class="modal-header">
