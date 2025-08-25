@@ -617,6 +617,7 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-primary);
         }
 
         .coffee-detail-subtitle {
@@ -761,6 +762,44 @@
             color: var(--error);
         }
 
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            background-color: var(--surface);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--info);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -803,6 +842,16 @@
             .sync-status {
                 margin-left: 0;
                 margin-top: 8px;
+            }
+
+            .notification {
+                left: 20px;
+                right: 20px;
+                transform: translateY(-100%);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
             }
         }
 
@@ -1100,7 +1149,8 @@
                 try {
                     const response = await fetch('https://api.github.com/user', {
                         headers: {
-                            'Authorization': `token ${token}`
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
                         }
                     });
                     
@@ -1111,10 +1161,12 @@
                         this.updateUI();
                         this.showNotification('Conectado a GitHub correctamente', 'success');
                         return true;
+                    } else {
+                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
                     }
                 } catch (error) {
                     console.error('Error connecting to GitHub:', error);
-                    this.showNotification('Error al conectar con GitHub', 'error');
+                    this.showNotification(`Error al conectar con GitHub: ${error.message}`, 'error');
                 }
                 
                 this.isConnected = false;
@@ -1123,45 +1175,76 @@
             }
 
             async findOrCreateGist() {
-                // Buscar gists existentes
-                const response = await fetch('https://api.github.com/gists', {
-                    headers: {
-                        'Authorization': `token ${this.token}`
+                try {
+                    // Buscar gists existentes con paginación
+                    let page = 1;
+                    let appGist = null;
+                    
+                    while (page <= 5 && !appGist) { // Limitar a 5 páginas para evitar bucles infinitos
+                        const response = await fetch(`https://api.github.com/gists?page=${page}&per_page=100`, {
+                            headers: {
+                                'Authorization': `token ${this.token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        const gists = await response.json();
+                        appGist = gists.find(gist => gist.description === 'Late Base Coffee Data');
+                        
+                        if (appGist) break;
+                        if (gists.length < 100) break; // Última página
+                        
+                        page++;
                     }
-                });
-                
-                const gists = await response.json();
-                const appGist = gists.find(gist => gist.description === 'Late Base Coffee Data');
-                
-                if (appGist) {
-                    this.gistId = appGist.id;
-                    localStorage.setItem('github_gist_id', appGist.id);
-                } else {
-                    await this.createGist();
+                    
+                    if (appGist) {
+                        this.gistId = appGist.id;
+                        localStorage.setItem('github_gist_id', appGist.id);
+                    } else {
+                        await this.createGist();
+                    }
+                } catch (error) {
+                    console.error('Error finding or creating gist:', error);
+                    throw error;
                 }
             }
 
             async createGist() {
-                const response = await fetch('https://api.github.com/gists', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `token ${this.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        description: 'Late Base Coffee Data',
-                        public: false,
-                        files: {
-                            'data.json': {
-                                content: JSON.stringify({ distributors: [], coffees: [] })
+                try {
+                    const response = await fetch('https://api.github.com/gists', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${this.token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
+                        },
+                        body: JSON.stringify({
+                            description: 'Late Base Coffee Data',
+                            public: false,
+                            files: {
+                                'data.json': {
+                                    content: JSON.stringify({ distributors: [], coffees: [] })
+                                }
                             }
-                        }
-                    })
-                });
-                
-                const gist = await response.json();
-                this.gistId = gist.id;
-                localStorage.setItem('github_gist_id', gist.id);
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Error creating gist: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
+                    }
+                    
+                    const gist = await response.json();
+                    this.gistId = gist.id;
+                    localStorage.setItem('github_gist_id', gist.id);
+                } catch (error) {
+                    console.error('Error creating gist:', error);
+                    throw error;
+                }
             }
 
             async saveData(data) {
@@ -1177,7 +1260,8 @@
                         method: 'PATCH',
                         headers: {
                             'Authorization': `token ${this.token}`,
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
                         },
                         body: JSON.stringify({
                             files: {
@@ -1193,14 +1277,13 @@
                         this.showNotification('Datos guardados en GitHub', 'success');
                         return true;
                     } else {
-                        this.showErrorStatus();
-                        this.showNotification('Error al guardar en GitHub', 'error');
-                        return false;
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Error saving data: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
                     }
                 } catch (error) {
                     console.error('Error saving data to GitHub:', error);
                     this.showErrorStatus();
-                    this.showNotification('Error de conexión con GitHub', 'error');
+                    this.showNotification(`Error al guardar en GitHub: ${error.message}`, 'error');
                     return false;
                 }
             }
@@ -1216,9 +1299,14 @@
                 try {
                     const response = await fetch(`https://api.github.com/gists/${this.gistId}`, {
                         headers: {
-                            'Authorization': `token ${this.token}`
+                            'Authorization': `token ${this.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
                         }
                     });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                    }
                     
                     const gist = await response.json();
                     const data = JSON.parse(gist.files['data.json'].content);
@@ -1229,7 +1317,7 @@
                 } catch (error) {
                     console.error('Error loading data from GitHub:', error);
                     this.showErrorStatus();
-                    this.showNotification('Error al cargar desde GitHub', 'error');
+                    this.showNotification(`Error al cargar desde GitHub: ${error.message}`, 'error');
                     return null;
                 }
             }
@@ -1293,9 +1381,28 @@
             }
 
             showNotification(message, type) {
-                // Crear notificación (podría implementarse con un sistema más elaborado)
-                console.log(`${type}: ${message}`);
-                // En una implementación real, mostraría una notificación visual al usuario
+                // Crear notificación visual
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Mostrar notificación
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                // Ocultar y eliminar después de 5 segundos
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 5000);
             }
         }
 
@@ -1487,7 +1594,7 @@
         function connectToGitHub() {
             const token = document.getElementById('githubToken').value.trim();
             if (!token) {
-                alert('Por favor, introduce un token de GitHub');
+                githubService.showNotification('Por favor, introduce un token de GitHub', 'error');
                 return;
             }
             
