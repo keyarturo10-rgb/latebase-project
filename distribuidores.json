@@ -7,8 +7,19 @@
       "email": "N@A",
       "phone": "04242625441",
       "region": "sur",
-      "coffees": []
+      "coffees": [
+        1
+      ]
     }
   ],
-  "coffees": []
+  "coffees": [
+    {
+      "id": 1,
+      "name": "Especial Aragua ",
+      "type": "arabica",
+      "origin": "Colonia Tovar ",
+      "score": 4,
+      "distributor": 1
+    }
+  ]
 }
