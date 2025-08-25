@@ -24,6 +24,10 @@ const githubStatusText = document.getElementById('github-status-text');
 const autoSyncToggle = document.getElementById('github-auto-sync');
 const syncIntervalContainer = document.getElementById('sync-interval-container');
 
+// Utility functions
+const $ = (selector, context = document) => context.querySelector(selector);
+const $$ = (selector, context = document) => context.querySelectorAll(selector);
+
 // Initialize application
 document.addEventListener('DOMContentLoaded', initApp);
 
@@ -39,7 +43,7 @@ function initApp() {
 
 function setupEventListeners() {
     // Navigation tabs
-    document.querySelectorAll('nav a').forEach(tab => {
+    $$('nav a').forEach(tab => {
         tab.addEventListener('click', (e) => {
             e.preventDefault();
             const tabName = tab.getAttribute('data-tab');
@@ -48,7 +52,7 @@ function setupEventListeners() {
     });
 
     // Modal close buttons
-    document.querySelectorAll('.close-modal').forEach(btn => {
+    $$('.close-modal').forEach(btn => {
         btn.addEventListener('click', () => {
             distributorModal.style.display = 'none';
             coffeeModal.style.display = 'none';
@@ -56,60 +60,79 @@ function setupEventListeners() {
     });
 
     // Add distributor button
-    document.getElementById('btn-add-distributor').addEventListener('click', () => {
+    $('#btn-add-distributor').addEventListener('click', () => {
         openDistributorModal();
     });
 
     // Add coffee button
-    document.getElementById('btn-add-coffee').addEventListener('click', () => {
+    $('#btn-add-coffee').addEventListener('click', () => {
         openCoffeeModal();
     });
 
-    // Distributor form submit
+    // Form submissions
     distributorForm.addEventListener('submit', handleDistributorSubmit);
-
-    // Coffee form submit
     coffeeForm.addEventListener('submit', handleCoffeeSubmit);
-
-    // GitHub config form submit
     githubConfigForm.addEventListener('submit', handleGithubConfigSubmit);
 
-    // Test connection button
-    document.getElementById('btn-test-connection').addEventListener('click', testGithubConnection);
+    // GitHub functionality
+    $('#btn-test-connection').addEventListener('click', testGithubConnection);
+    $('#btn-sync-now').addEventListener('click', syncWithGithub);
 
     // Auto sync toggle
     autoSyncToggle.addEventListener('change', () => {
         syncIntervalContainer.style.display = autoSyncToggle.checked ? 'block' : 'none';
     });
 
-    // Sync now button
-    document.getElementById('btn-sync-now').addEventListener('click', syncWithGithub);
-
     // Search functionality
-    document.getElementById('btn-search-distributors').addEventListener('click', searchDistributors);
-    document.getElementById('btn-search-coffees').addEventListener('click', searchCoffees);
+    $('#btn-search-distributors').addEventListener('click', searchDistributors);
+    $('#btn-search-coffees').addEventListener('click', searchCoffees);
+
+    // Event delegation for dynamic content
+    distributorsGrid.addEventListener('click', handleDistributorActions);
+    coffeesGrid.addEventListener('click', handleCoffeeActions);
+}
+
+function handleDistributorActions(e) {
+    const target = e.target;
+    if (target.classList.contains('edit-distributor')) {
+        const id = target.getAttribute('data-id');
+        openDistributorModal(id);
+    } else if (target.classList.contains('delete-distributor')) {
+        const id = target.getAttribute('data-id');
+        deleteDistributor(id);
+    }
+}
+
+function handleCoffeeActions(e) {
+    const target = e.target;
+    if (target.classList.contains('edit-coffee')) {
+        const id = target.getAttribute('data-id');
+        openCoffeeModal(id);
+    } else if (target.classList.contains('delete-coffee')) {
+        const id = target.getAttribute('data-id');
+        deleteCoffee(id);
+    }
 }
 
 function setupTabs() {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
+    $$('.tab-content').forEach(tab => {
         tab.style.display = 'none';
     });
-    document.querySelector('.tab-content.active').style.display = 'block';
+    $('.tab-content.active').style.display = 'block';
 }
 
 function activateTab(tabName) {
     // Update navigation
-    document.querySelectorAll('nav a').forEach(tab => {
+    $$('nav a').forEach(tab => {
         tab.classList.remove('active');
     });
-    document.querySelector(`nav a[data-tab="${tabName}"]`).classList.add('active');
+    $(`nav a[data-tab="${tabName}"]`).classList.add('active');
 
     // Update content
-    document.querySelectorAll('.tab-content').forEach(tab => {
+    $$('.tab-content').forEach(tab => {
         tab.style.display = 'none';
     });
-    document.getElementById(tabName).style.display = 'block';
+    $(`#${tabName}`).style.display = 'block';
 }
 
 function loadData() {
@@ -137,12 +160,12 @@ function loadGithubConfig() {
         githubConfig = JSON.parse(savedConfig);
         
         // Update form fields
-        document.getElementById('github-user').value = githubConfig.user;
-        document.getElementById('github-repo').value = githubConfig.repo;
-        document.getElementById('github-branch').value = githubConfig.branch;
-        document.getElementById('github-token').value = githubConfig.token;
-        document.getElementById('github-auto-sync').checked = githubConfig.autoSync;
-        document.getElementById('sync-interval').value = githubConfig.syncInterval;
+        $('#github-user').value = githubConfig.user;
+        $('#github-repo').value = githubConfig.repo;
+        $('#github-branch').value = githubConfig.branch;
+        $('#github-token').value = githubConfig.token;
+        $('#github-auto-sync').checked = githubConfig.autoSync;
+        $('#sync-interval').value = githubConfig.syncInterval;
         
         syncIntervalContainer.style.display = githubConfig.autoSync ? 'block' : 'none';
         
@@ -195,6 +218,8 @@ function renderDistributors(filteredDistributors = null) {
         return;
     }
     
+    const fragment = document.createDocumentFragment();
+    
     data.forEach(distributor => {
         const coffeeCount = coffees.filter(coffee => coffee.distributorId === distributor.id).length;
         
@@ -202,13 +227,13 @@ function renderDistributors(filteredDistributors = null) {
         card.className = 'card';
         card.innerHTML = `
             <div class="card-header">
-                <h3>${distributor.name}</h3>
+                <h3>${escapeHTML(distributor.name)}</h3>
             </div>
             <div class="card-body">
-                <p><strong>País:</strong> ${distributor.country}</p>
-                <p><strong>Región:</strong> ${distributor.region}</p>
-                <p><strong>Contacto:</strong> ${distributor.contact}</p>
-                <p>${distributor.description}</p>
+                <p><strong>País:</strong> ${escapeHTML(distributor.country)}</p>
+                <p><strong>Región:</strong> ${escapeHTML(distributor.region)}</p>
+                <p><strong>Contacto:</strong> ${escapeHTML(distributor.contact)}</p>
+                <p>${escapeHTML(distributor.description)}</p>
             </div>
             <div class="card-footer">
                 <div class="coffee-count" title="Cafés asociados">${coffeeCount}</div>
@@ -219,23 +244,10 @@ function renderDistributors(filteredDistributors = null) {
             </div>
         `;
         
-        distributorsGrid.appendChild(card);
+        fragment.appendChild(card);
     });
     
-    // Add event listeners to edit and delete buttons
-    document.querySelectorAll('.edit-distributor').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.target.getAttribute('data-id');
-            openDistributorModal(id);
-        });
-    });
-    
-    document.querySelectorAll('.delete-distributor').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.target.getAttribute('data-id');
-            deleteDistributor(id);
-        });
-    });
+    distributorsGrid.appendChild(fragment);
 }
 
 function renderCoffees(filteredCoffees = null) {
@@ -247,6 +259,8 @@ function renderCoffees(filteredCoffees = null) {
         return;
     }
     
+    const fragment = document.createDocumentFragment();
+    
     data.forEach(coffee => {
         const distributor = distributors.find(d => d.id === coffee.distributorId);
         const distributorName = distributor ? distributor.name : 'Desconocido';
@@ -255,17 +269,17 @@ function renderCoffees(filteredCoffees = null) {
         card.className = 'card';
         card.innerHTML = `
             <div class="card-header">
-                <h3>${coffee.name}</h3>
+                <h3>${escapeHTML(coffee.name)}</h3>
             </div>
             <div class="card-body">
-                <p><strong>Distribuidor:</strong> ${distributorName}</p>
-                <p><strong>Origen:</strong> ${coffee.origin}</p>
+                <p><strong>Distribuidor:</strong> ${escapeHTML(distributorName)}</p>
+                <p><strong>Origen:</strong> ${escapeHTML(coffee.origin)}</p>
                 <p><strong>Altitud:</strong> ${coffee.altitude} msnm</p>
-                <p><strong>Variedad:</strong> ${coffee.variety}</p>
-                <p><strong>Proceso:</strong> ${coffee.process}</p>
-                <p><strong>Tostación:</strong> ${coffee.roastLevel}</p>
+                <p><strong>Variedad:</strong> ${escapeHTML(coffee.variety)}</p>
+                <p><strong>Proceso:</strong> ${escapeHTML(coffee.process)}</p>
+                <p><strong>Tostación:</strong> ${escapeHTML(coffee.roastLevel)}</p>
                 <p><strong>Puntuación SCA:</strong> ${coffee.scaScore}</p>
-                <p><strong>Notas de cata:</strong> ${coffee.tastingNotes}</p>
+                <p><strong>Notas de cata:</strong> ${escapeHTML(coffee.tastingNotes)}</p>
                 <p><strong>Precios:</strong> 250g: €${coffee.price250g} | 500g: €${coffee.price500g} | 1kg: €${coffee.price1kg}</p>
             </div>
             <div class="card-footer">
@@ -276,59 +290,46 @@ function renderCoffees(filteredCoffees = null) {
             </div>
         `;
         
-        coffeesGrid.appendChild(card);
+        fragment.appendChild(card);
     });
     
-    // Add event listeners to edit and delete buttons
-    document.querySelectorAll('.edit-coffee').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.target.getAttribute('data-id');
-            openCoffeeModal(id);
-        });
-    });
-    
-    document.querySelectorAll('.delete-coffee').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.target.getAttribute('data-id');
-            deleteCoffee(id);
-        });
-    });
+    coffeesGrid.appendChild(fragment);
 }
 
 function openDistributorModal(id = null) {
-    const modalTitle = document.getElementById('distributor-modal-title');
-    const form = document.getElementById('distributor-form');
+    const modalTitle = $('#distributor-modal-title');
+    const form = $('#distributor-form');
     
     if (id) {
         // Edit mode
         modalTitle.textContent = 'Editar Distribuidor';
         const distributor = distributors.find(d => d.id === id);
         
-        document.getElementById('distributor-id').value = distributor.id;
-        document.getElementById('distributor-name').value = distributor.name;
-        document.getElementById('distributor-country').value = distributor.country;
-        document.getElementById('distributor-region').value = distributor.region;
-        document.getElementById('distributor-contact').value = distributor.contact;
-        document.getElementById('distributor-description').value = distributor.description;
+        $('#distributor-id').value = distributor.id;
+        $('#distributor-name').value = distributor.name;
+        $('#distributor-country').value = distributor.country;
+        $('#distributor-region').value = distributor.region;
+        $('#distributor-contact').value = distributor.contact;
+        $('#distributor-description').value = distributor.description;
     } else {
         // Add mode
         modalTitle.textContent = 'Agregar Distribuidor';
         form.reset();
-        document.getElementById('distributor-id').value = '';
+        $('#distributor-id').value = '';
     }
     
     distributorModal.style.display = 'flex';
 }
 
 function openCoffeeModal(id = null) {
-    const modalTitle = document.getElementById('coffee-modal-title');
-    const form = document.getElementById('coffee-form');
-    const distributorSelect = document.getElementById('coffee-distributor');
+    const modalTitle = $('#coffee-modal-title');
+    const form = $('#coffee-form');
+    const distributorSelect = $('#coffee-distributor');
     
     // Populate distributor dropdown
     distributorSelect.innerHTML = '<option value="">Seleccionar distribuidor</option>';
     distributors.forEach(distributor => {
-        distributorSelect.innerHTML += `<option value="${distributor.id}">${distributor.name}</option>`;
+        distributorSelect.innerHTML += `<option value="${distributor.id}">${escapeHTML(distributor.name)}</option>`;
     });
     
     if (id) {
@@ -336,24 +337,24 @@ function openCoffeeModal(id = null) {
         modalTitle.textContent = 'Editar Café';
         const coffee = coffees.find(c => c.id === id);
         
-        document.getElementById('coffee-id').value = coffee.id;
-        document.getElementById('coffee-distributor').value = coffee.distributorId;
-        document.getElementById('coffee-name').value = coffee.name;
-        document.getElementById('coffee-origin').value = coffee.origin;
-        document.getElementById('coffee-altitude').value = coffee.altitude;
-        document.getElementById('coffee-variety').value = coffee.variety;
-        document.getElementById('coffee-process').value = coffee.process;
-        document.getElementById('coffee-roast').value = coffee.roastLevel;
-        document.getElementById('coffee-sca').value = coffee.scaScore;
-        document.getElementById('coffee-tasting').value = coffee.tastingNotes;
-        document.getElementById('coffee-price-250').value = coffee.price250g;
-        document.getElementById('coffee-price-500').value = coffee.price500g;
-        document.getElementById('coffee-price-1kg').value = coffee.price1kg;
+        $('#coffee-id').value = coffee.id;
+        $('#coffee-distributor').value = coffee.distributorId;
+        $('#coffee-name').value = coffee.name;
+        $('#coffee-origin').value = coffee.origin;
+        $('#coffee-altitude').value = coffee.altitude;
+        $('#coffee-variety').value = coffee.variety;
+        $('#coffee-process').value = coffee.process;
+        $('#coffee-roast').value = coffee.roastLevel;
+        $('#coffee-sca').value = coffee.scaScore;
+        $('#coffee-tasting').value = coffee.tastingNotes;
+        $('#coffee-price-250').value = coffee.price250g;
+        $('#coffee-price-500').value = coffee.price500g;
+        $('#coffee-price-1kg').value = coffee.price1kg;
     } else {
         // Add mode
         modalTitle.textContent = 'Agregar Café';
         form.reset();
-        document.getElementById('coffee-id').value = '';
+        $('#coffee-id').value = '';
     }
     
     coffeeModal.style.display = 'flex';
@@ -362,12 +363,12 @@ function openCoffeeModal(id = null) {
 function handleDistributorSubmit(e) {
     e.preventDefault();
     
-    const id = document.getElementById('distributor-id').value;
-    const name = document.getElementById('distributor-name').value;
-    const country = document.getElementById('distributor-country').value;
-    const region = document.getElementById('distributor-region').value;
-    const contact = document.getElementById('distributor-contact').value;
-    const description = document.getElementById('distributor-description').value;
+    const id = $('#distributor-id').value;
+    const name = $('#distributor-name').value;
+    const country = $('#distributor-country').value;
+    const region = $('#distributor-region').value;
+    const contact = $('#distributor-contact').value;
+    const description = $('#distributor-description').value;
     
     if (id) {
         // Update existing distributor
@@ -396,19 +397,19 @@ function handleDistributorSubmit(e) {
 function handleCoffeeSubmit(e) {
     e.preventDefault();
     
-    const id = document.getElementById('coffee-id').value;
-    const distributorId = document.getElementById('coffee-distributor').value;
-    const name = document.getElementById('coffee-name').value;
-    const origin = document.getElementById('coffee-origin').value;
-    const altitude = document.getElementById('coffee-altitude').value;
-    const variety = document.getElementById('coffee-variety').value;
-    const process = document.getElementById('coffee-process').value;
-    const roastLevel = document.getElementById('coffee-roast').value;
-    const scaScore = document.getElementById('coffee-sca').value;
-    const tastingNotes = document.getElementById('coffee-tasting').value;
-    const price250g = document.getElementById('coffee-price-250').value;
-    const price500g = document.getElementById('coffee-price-500').value;
-    const price1kg = document.getElementById('coffee-price-1kg').value;
+    const id = $('#coffee-id').value;
+    const distributorId = $('#coffee-distributor').value;
+    const name = $('#coffee-name').value;
+    const origin = $('#coffee-origin').value;
+    const altitude = parseFloat($('#coffee-altitude').value);
+    const variety = $('#coffee-variety').value;
+    const process = $('#coffee-process').value;
+    const roastLevel = $('#coffee-roast').value;
+    const scaScore = parseFloat($('#coffee-sca').value);
+    const tastingNotes = $('#coffee-tasting').value;
+    const price250g = parseFloat($('#coffee-price-250').value);
+    const price500g = parseFloat($('#coffee-price-500').value);
+    const price1kg = parseFloat($('#coffee-price-1kg').value);
     
     if (id) {
         // Update existing coffee
@@ -458,12 +459,12 @@ function handleCoffeeSubmit(e) {
 function handleGithubConfigSubmit(e) {
     e.preventDefault();
     
-    githubConfig.user = document.getElementById('github-user').value;
-    githubConfig.repo = document.getElementById('github-repo').value;
-    githubConfig.branch = document.getElementById('github-branch').value;
-    githubConfig.token = document.getElementById('github-token').value;
-    githubConfig.autoSync = document.getElementById('github-auto-sync').checked;
-    githubConfig.syncInterval = parseInt(document.getElementById('sync-interval').value);
+    githubConfig.user = $('#github-user').value;
+    githubConfig.repo = $('#github-repo').value;
+    githubConfig.branch = $('#github-branch').value;
+    githubConfig.token = $('#github-token').value;
+    githubConfig.autoSync = $('#github-auto-sync').checked;
+    githubConfig.syncInterval = parseInt($('#sync-interval').value);
     
     saveGithubConfig();
     alert('Configuración de GitHub guardada correctamente.');
@@ -492,7 +493,7 @@ function deleteCoffee(id) {
 }
 
 function searchDistributors() {
-    const query = document.getElementById('search-distributors').value.toLowerCase();
+    const query = $('#search-distributors').value.toLowerCase();
     if (!query) {
         renderDistributors();
         return;
@@ -503,14 +504,14 @@ function searchDistributors() {
         distributor.country.toLowerCase().includes(query) ||
         distributor.region.toLowerCase().includes(query) ||
         distributor.contact.toLowerCase().includes(query) ||
-        distributor.description.toLowerCase().includes(query)
+        (distributor.description && distributor.description.toLowerCase().includes(query))
     );
     
     renderDistributors(filtered);
 }
 
 function searchCoffees() {
-    const query = document.getElementById('search-coffees').value.toLowerCase();
+    const query = $('#search-coffees').value.toLowerCase();
     if (!query) {
         renderCoffees();
         return;
@@ -518,7 +519,7 @@ function searchCoffees() {
     
     const filtered = coffees.filter(coffee => {
         const distributor = distributors.find(d => d.id === coffee.distributorId);
-        const distributorName = distributor ? distributor.name : '';
+        const distributorName = distributor ? distributor.name.toLowerCase() : '';
         
         return (
             coffee.name.toLowerCase().includes(query) ||
@@ -527,7 +528,7 @@ function searchCoffees() {
             coffee.process.toLowerCase().includes(query) ||
             coffee.roastLevel.toLowerCase().includes(query) ||
             coffee.tastingNotes.toLowerCase().includes(query) ||
-            distributorName.toLowerCase().includes(query)
+            distributorName.includes(query)
         );
     });
     
@@ -535,9 +536,9 @@ function searchCoffees() {
 }
 
 async function testGithubConnection() {
-    const user = document.getElementById('github-user').value;
-    const repo = document.getElementById('github-repo').value;
-    const token = document.getElementById('github-token').value;
+    const user = $('#github-user').value;
+    const repo = $('#github-repo').value;
+    const token = $('#github-token').value;
     
     if (!user || !repo || !token) {
         alert('Por favor, completa todos los campos de configuración de GitHub.');
@@ -555,7 +556,8 @@ async function testGithubConnection() {
         if (response.ok) {
             alert('Conexión a GitHub exitosa. El repositorio existe y el token es válido.');
         } else {
-            alert('Error al conectar con GitHub. Verifica los datos y el token.');
+            const errorData = await response.json().catch(() => ({}));
+            alert(`Error al conectar con GitHub: ${errorData.message || response.statusText}`);
         }
     } catch (error) {
         alert('Error al conectar con GitHub: ' + error.message);
@@ -617,9 +619,21 @@ async function syncWithGithub() {
         if (response.ok) {
             alert('Datos sincronizados correctamente con GitHub.');
         } else {
-            alert('Error al sincronizar con GitHub.');
+            const errorData = await response.json().catch(() => ({}));
+            alert(`Error al sincronizar con GitHub: ${errorData.message || response.statusText}`);
         }
     } catch (error) {
         alert('Error al sincronizar con GitHub: ' + error.message);
     }
+}
+
+// Utility function to prevent XSS
+function escapeHTML(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
