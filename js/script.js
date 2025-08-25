@@ -53,6 +53,7 @@ function updateGitHubUI() {
     const syncInterval = document.getElementById('syncInterval');
     const tokenStatus = document.getElementById('tokenStatus');
     const autoSyncStatus = document.getElementById('autoSyncStatus');
+    const syncIntervalContainer = document.getElementById('syncIntervalContainer');
     
     if (autoSyncToggle) autoSyncToggle.checked = GITHUB_CONFIG.AUTO_SYNC;
     if (syncInterval) syncInterval.value = GITHUB_CONFIG.SYNC_INTERVAL;
@@ -66,6 +67,11 @@ function updateGitHubUI() {
         autoSyncStatus.textContent = GITHUB_CONFIG.AUTO_SYNC ? 
             `✅ Sincronización automática activada (cada ${GITHUB_CONFIG.SYNC_INTERVAL} minutos)` : 
             '❌ Sincronización automática desactivada';
+    }
+    
+    // Mostrar/ocultar el intervalo según el toggle
+    if (syncIntervalContainer) {
+        syncIntervalContainer.style.display = GITHUB_CONFIG.AUTO_SYNC ? 'block' : 'none';
     }
 }
 
@@ -373,13 +379,13 @@ function loadCoffees() {
                     <div class="spec-label">Proceso</div>
                     <div class="spec-value">${coffee.process}</div>
                 </div>
-                <div class="spec-item">
-                    <div class="spec-label">Notas de Cata</div>
-                    <div class="spec-value">${coffee.notes}</div>
+                <div class='spec-item'>
+                    <div class='spec-label'>Notas de Cata</div>
+                    <div class='spec-value'>${coffee.notes}</div>
                 </div>
-                <div class="spec-item">
-                    <div class="spec-label">Tostión</div>
-                    <div class="spec-value">${coffee.roastLevel}</div>
+                <div class='spec-item'>
+                    <div class='spec-label'>Tostión</div>
+                    <div class='spec-value'>${coffee.roastLevel}</div>
                 </div>
             </div>
             
@@ -684,12 +690,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('autoSyncToggle').checked = GITHUB_CONFIG.AUTO_SYNC;
         document.getElementById('syncInterval').value = GITHUB_CONFIG.SYNC_INTERVAL;
         
-        // Mostrar/ocultar el intervalo según el toggle
-        if (GITHUB_CONFIG.AUTO_SYNC) {
-            document.getElementById('syncIntervalContainer').style.display = 'block';
-        }
-        
+        // Actualizar la UI de GitHub
         updateGitHubUI();
+        
+        // Mostrar la vista de configuración de GitHub
         showView('githubConfigView');
     });
     
@@ -742,11 +746,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('autoSyncToggle').addEventListener('change', function() {
         GITHUB_CONFIG.AUTO_SYNC = this.checked;
-        if (this.checked) {
-            document.getElementById('syncIntervalContainer').style.display = 'block';
-        } else {
-            document.getElementById('syncIntervalContainer').style.display = 'none';
-        }
         saveGitHubConfig();
     });
     
