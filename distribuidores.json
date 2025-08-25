@@ -1,25 +1,4 @@
 {
-  "distributors": [
-    {
-      "id": 1,
-      "name": "Amadahy",
-      "contact": "Juan",
-      "email": "N@A",
-      "phone": "04242625441",
-      "region": "sur",
-      "coffees": [
-        1
-      ]
-    }
-  ],
-  "coffees": [
-    {
-      "id": 1,
-      "name": "Especial Aragua ",
-      "type": "arabica",
-      "origin": "Colonia Tovar ",
-      "score": 4,
-      "distributor": 1
-    }
-  ]
+  "distributors": [],
+  "coffees": []
 }
