@@ -29,6 +29,7 @@
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
+            --radius-xl: 24px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -492,7 +493,7 @@
             background-color: var(--surface);
             border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
@@ -799,61 +800,72 @@
             border-left: 4px solid var(--warning);
         }
 
-        /* GitHub Status Bar */
-        .github-status-bar {
-            background-color: var(--primary-light);
-            border: 1px solid var(--divider);
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            margin-bottom: 24px;
+        /* Formularios mejorados */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .range-values {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
+            margin-top: 5px;
         }
 
-        .github-status-bar.connected {
-            background-color: rgba(56, 142, 60, 0.1);
-            border-color: var(--success);
-        }
-
-        .github-status-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-
-        .github-status-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* GitHub Modal */
-        .github-modal-content {
-            max-width: 500px;
-        }
-
-        .github-help {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--divider);
-        }
-
-        .github-help h3 {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .github-help ol {
-            padding-left: 20px;
-            font-size: 0.9rem;
+        .range-value {
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
-        .github-help li {
-            margin-bottom: 8px;
+        /* Puntuación SCA */
+        .sca-score {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .sca-score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+        }
+
+        .sca-score-bar {
+            flex-grow: 1;
+            height: 8px;
+            background-color: var(--divider);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .sca-score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--error), var(--warning), var(--success));
+            border-radius: 4px;
         }
 
         /* Responsive */
@@ -910,15 +922,8 @@
                 transform: translateY(0);
             }
 
-            .github-status-bar {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
-
-            .github-status-actions {
-                width: 100%;
-                justify-content: space-between;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -977,22 +982,6 @@
 
     <main>
         <div class="container">
-            <!-- GitHub Status Bar -->
-            <div class="github-status-bar" id="githubStatusBar">
-                <div class="github-status-text">
-                    <i class="fas fa-circle" id="githubStatusIcon"></i>
-                    <span id="githubStatusText">No conectado a GitHub</span>
-                </div>
-                <div class="github-status-actions">
-                    <button class="btn btn-secondary btn-sm" id="syncNowBtn">
-                        <i class="fas fa-sync"></i> Sincronizar ahora
-                    </button>
-                    <button class="btn btn-primary btn-sm" id="configureGithubBtn">
-                        <i class="fas fa-cog"></i> Configurar
-                    </button>
-                </div>
-            </div>
-
             <!-- Sección Distribuidores -->
             <div id="distributors" class="tab-content active">
                 <div class="section-header">
@@ -1012,13 +1001,6 @@
                         </button>
                     </div>
                     <div class="filters">
-                        <select class="filter-select" id="regionFilter">
-                            <option value="">Todas las regiones</option>
-                            <option value="norte">Norte</option>
-                            <option value="sur">Sur</option>
-                            <option value="este">Este</option>
-                            <option value="oeste">Oeste</option>
-                        </select>
                         <select class="filter-select" id="scoreFilter">
                             <option value="">Todos los puntajes</option>
                             <option value="5">5 estrellas</option>
@@ -1036,7 +1018,7 @@
             <!-- Sección Cafés -->
             <div id="coffees" class="tab-content">
                 <div class="section-header">
-                    <h2 class="section-title">Cafés</h2>
+                    <h2 class="section-title">Cafés de Especialidad</h2>
                     <div class="section-actions">
                         <button class="btn btn-primary" id="addCoffeeBtn">
                             <i class="fas fa-plus"></i> Nuevo Café
@@ -1082,29 +1064,14 @@
                     <div class="github-config-header">
                         <div class="github-status">
                             <span class="status-indicator" id="githubStatusIndicator"></span>
-                            <span id="githubDetailedStatusText">Desconectado</span>
+                            <span id="githubStatusText">Desconectado</span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="githubToken">Token de acceso personal de GitHub</label>
                         <input type="password" id="githubToken" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                        <small>Crea un token en GitHub con permisos "repo" y cópialo aquí</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="githubUsername">Nombre de usuario de GitHub</label>
-                        <input type="text" id="githubUsername" class="form-control" placeholder="tu-usuario">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="githubRepo">Repositorio</label>
-                        <input type="text" id="githubRepo" class="form-control" placeholder="late-base-data">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="githubFile">Archivo de datos</label>
-                        <input type="text" id="githubFile" class="form-control" placeholder="data.json">
+                        <small>Crea un token en GitHub con permisos gist y cópialo aquí</small>
                     </div>
 
                     <div class="form-actions">
@@ -1127,17 +1094,6 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="github-help">
-                    <h3>¿Cómo obtener un token?</h3>
-                    <ol>
-                        <li>Inicia sesión en tu cuenta de GitHub</li>
-                        <li>Ve a Settings > Developer settings > Personal access tokens</li>
-                        <li>Haz clic en "Generate new token"</li>
-                        <li>Selecciona el alcance "repo" para dar acceso a repositorios</li>
-                        <li>Copia el token generado y pégala arriba</li>
-                    </ol>
-                </div>
             </div>
         </div>
     </main>
@@ -1152,31 +1108,27 @@
             <div class="modal-body">
                 <form id="distributorForm">
                     <input type="hidden" id="distributorId">
-                    <div class="form-group">
-                        <label for="distributorName">Nombre del distribuidor</label>
-                        <input type="text" id="distributorName" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="distributorContact">Persona de contacto</label>
-                        <input type="text" id="distributorContact" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="distributorEmail">Email</label>
-                        <input type="email" id="distributorEmail" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="distributorPhone">Teléfono</label>
-                        <input type="tel" id="distributorPhone" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="distributorRegion">Región</label>
-                        <select id="distributorRegion" class="form-control" required>
-                            <option value="">Selecciona una región</option>
-                            <option value="norte">Norte</option>
-                            <option value="sur">Sur</option>
-                            <option value="este">Este</option>
-                            <option value="oeste">Oeste</option>
-                        </select>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="distributorName">Nombre del distribuidor</label>
+                            <input type="text" id="distributorName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="distributorContact">Persona de contacto</label>
+                            <input type="text" id="distributorContact" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="distributorEmail">Email</label>
+                            <input type="email" id="distributorEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="distributorPhone">Teléfono</label>
+                            <input type="tel" id="distributorPhone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="distributorLocation">Ubicación del productor</label>
+                            <input type="text" id="distributorLocation" class="form-control" placeholder="Ciudad, Estado, País" required>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
@@ -1191,43 +1143,166 @@
     <div class="modal" id="coffeeModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="coffeeModalTitle">Nuevo Café</h2>
+                <h2 id="coffeeModalTitle">Nuevo Café de Especialidad</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="coffeeForm">
                     <input type="hidden" id="coffeeId">
-                    <div class="form-group">
-                        <label for="coffeeName">Nombre del café</label>
-                        <input type="text" id="coffeeName" class="form-control" required>
+                    
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-coffee"></i> Información Básica</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="coffeeName">Nombre del café</label>
+                                <input type="text" id="coffeeName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeVariety">Variedad</label>
+                                <input type="text" id="coffeeVariety" class="form-control" placeholder="Ej: Bourbon, Caturra, Geisha">
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeProcess">Proceso</label>
+                                <select id="coffeeProcess" class="form-control" required>
+                                    <option value="">Selecciona un proceso</option>
+                                    <option value="lavado">Lavado</option>
+                                    <option value="natural">Natural</option>
+                                    <option value="honey">Honey</option>
+                                    <option value="anaerobico">Anaeróbico</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeAltitude">Altitud (msnm)</label>
+                                <input type="number" id="coffeeAltitude" class="form-control" placeholder="metros sobre el nivel del mar">
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeRegion">Región</label>
+                                <input type="text" id="coffeeRegion" class="form-control" placeholder="Región de cultivo">
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeProducer">Productor</label>
+                                <input type="text" id="coffeeProducer" class="form-control" placeholder="Nombre del productor">
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeHarvest">Cosecha</label>
+                                <input type="month" id="coffeeHarvest" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeDistributor">Distribuidor</label>
+                                <select id="coffeeDistributor" class="form-control" required>
+                                    <option value="">Selecciona un distribuidor</option>
+                                    <!-- Los distribuidores se cargarán aquí dinámicamente -->
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="coffeeType">Tipo</label>
-                        <select id="coffeeType" class="form-control" required>
-                            <option value="">Selecciona un tipo</option>
-                            <option value="arabica">Arábica</option>
-                            <option value="robusta">Robusta</option>
-                            <option value="blend">Blend</option>
-                        </select>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-wine-glass"></i> Análisis Sensorial SCA</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="coffeeFragrance">Fragancia (1-10)</label>
+                                <input type="range" id="coffeeFragrance" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeFlavor">Sabor (1-10)</label>
+                                <input type="range" id="coffeeFlavor" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeAftertaste">Residual (1-10)</label>
+                                <input type="range" id="coffeeAftertaste" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeAcidity">Acidez (1-10)</label>
+                                <input type="range" id="coffeeAcidity" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeBody">Cuerpo (1-10)</label>
+                                <input type="range" id="coffeeBody" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeBalance">Balance (1-10)</label>
+                                <input type="range" id="coffeeBalance" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeSweetness">Dulzor (1-10)</label>
+                                <input type="range" id="coffeeSweetness" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeCleanliness">Limpieza (1-10)</label>
+                                <input type="range" id="coffeeCleanliness" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="coffeeUniformity">Uniformidad (1-10)</label>
+                                <input type="range" id="coffeeUniformity" class="range-slider" min="1" max="10" value="5" step="0.5">
+                                <div class="range-values">
+                                    <span class="range-value">1</span>
+                                    <span class="range-value">5</span>
+                                    <span class="range-value">10</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="coffeeOrigin">Origen</label>
-                        <input type="text" id="coffeeOrigin" class="form-control" required>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-star"></i> Puntuación General SCA</h3>
+                        <div class="sca-score">
+                            <div class="sca-score-value" id="scaScoreValue">80.0</div>
+                            <div class="sca-score-bar">
+                                <div class="sca-score-fill" id="scaScoreFill" style="width: 80%;"></div>
+                            </div>
+                            <div>de 100</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="coffeeNotes">Notas de cata</label>
+                            <textarea id="coffeeNotes" class="form-control" rows="3" placeholder="Describe las notas de sabor, aroma, etc."></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="coffeeScore">Puntuación (1-5)</label>
-                        <input type="number" id="coffeeScore" class="form-control" min="1" max="5" step="0.1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="coffeeDistributor">Distribuidor</label>
-                        <select id="coffeeDistributor" class="form-control" required>
-                            <option value="">Selecciona un distribuidor</option>
-                            <!-- Los distribuidores se cargarán aquí dinámicamente -->
-                        </select>
-                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Café</button>
                     </div>
                 </form>
             </div>
@@ -1240,153 +1315,90 @@
         </div>
     </footer>
 
-    <!-- Modal de GitHub (similar al de La-té Lab) -->
-    <div id="githubConfigModal" class="modal">
-        <div class="modal-content github-modal-content">
-            <div class="modal-header">
-                <h2>Configuración de GitHub</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Para guardar tus datos en GitHub, necesitas configurar un token de acceso personal.</p>
-                
-                <div class="form-group">
-                    <label class="form-label">Token de acceso personal</label>
-                    <input type="password" class="form-control" id="modalGithubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Nombre de usuario de GitHub</label>
-                    <input type="text" class="form-control" id="modalGithubUsername" placeholder="tu-usuario">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Repositorio</label>
-                    <input type="text" class="form-control" id="modalGithubRepo" placeholder="late-base-data">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Archivo de datos</label>
-                    <input type="text" class="form-control" id="modalGithubFile" placeholder="data.json">
-                </div>
-                
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="saveGithubConfigBtn">Guardar configuración</button>
-                </div>
-                
-                <div class="github-help">
-                    <h3>¿Cómo obtener un token?</h3>
-                    <ol>
-                        <li>Inicia sesión en tu cuenta de GitHub</li>
-                        <li>Ve a Settings > Developer settings > Personal access tokens</li>
-                        <li>Haz clic en "Generate new token"</li>
-                        <li>Selecciona el alcance "repo" para dar acceso a repositorios</li>
-                        <li>Copia el token generado y pégala arriba</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // GitHub Service basado en La-té Lab
+        // GitHub Service
         class GitHubService {
             constructor() {
-                this.config = {
-                    token: null,
-                    username: null,
-                    repo: null,
-                    file: 'data.json'
-                };
-                this.isConnected = false;
-                this.loadConfig();
-            }
-
-            loadConfig() {
-                const savedConfig = localStorage.getItem('githubConfig');
-                if (savedConfig) {
-                    this.config = JSON.parse(savedConfig);
-                    this.isConnected = !!this.config.token;
-                    this.updateUI();
-                }
-            }
-
-            saveConfig() {
-                localStorage.setItem('githubConfig', JSON.stringify(this.config));
-                this.isConnected = !!this.config.token;
+                this.token = localStorage.getItem('github_token');
+                this.gistId = localStorage.getItem('github_gist_id');
+                this.isConnected = !!this.token;
                 this.updateUI();
             }
 
-            updateUI() {
-                const statusBar = document.getElementById('githubStatusBar');
-                const statusIcon = document.getElementById('githubStatusIcon');
-                const statusText = document.getElementById('githubStatusText');
-                const detailedStatusText = document.getElementById('githubDetailedStatusText');
-                const statusIndicator = document.getElementById('githubStatusIndicator');
-                const connectBtn = document.getElementById('connectGitHubBtn');
-                const disconnectBtn = document.getElementById('disconnectGitHubBtn');
-                
-                if (this.isConnected) {
-                    statusBar.classList.add('connected');
-                    statusIcon.className = 'fas fa-circle';
-                    statusIcon.style.color = 'var(--success)';
-                    statusText.textContent = `Conectado a GitHub: ${this.config.username}/${this.config.repo}`;
-                    detailedStatusText.textContent = 'Conectado';
-                    statusIndicator.className = 'status-indicator status-connected';
-                    connectBtn.style.display = 'none';
-                    disconnectBtn.style.display = 'block';
-                } else {
-                    statusBar.classList.remove('connected');
-                    statusIcon.className = 'fas fa-circle';
-                    statusIcon.style.color = 'var(--error)';
-                    statusText.textContent = 'No conectado a GitHub';
-                    detailedStatusText.textContent = 'Desconectado';
-                    statusIndicator.className = 'status-indicator status-disconnected';
-                    connectBtn.style.display = 'block';
-                    disconnectBtn.style.display = 'none';
-                }
-            }
-
-            async connect(token, username, repo, file) {
-                this.config.token = token;
-                this.config.username = username;
-                this.config.repo = repo;
-                this.config.file = file || 'data.json';
+            async connect(token) {
+                this.token = token;
+                localStorage.setItem('github_token', token);
                 
                 // Verificar que el token es válido
                 try {
                     const response = await fetch('https://api.github.com/user', {
                         headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
+                            'Authorization': `token ${token}`
                         }
                     });
                     
                     if (response.ok) {
                         this.isConnected = true;
-                        this.saveConfig();
+                        // Buscar si ya existe un gist para esta app
+                        await this.findOrCreateGist();
+                        this.updateUI();
                         this.showNotification('Conectado a GitHub correctamente', 'success');
                         return true;
-                    } else {
-                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
                     }
                 } catch (error) {
                     console.error('Error connecting to GitHub:', error);
-                    this.showNotification(`Error al conectar con GitHub: ${error.message}`, 'error');
-                    this.isConnected = false;
-                    return false;
+                    this.showNotification('Error al conectar con GitHub', 'error');
+                }
+                
+                this.isConnected = false;
+                this.updateUI();
+                return false;
+            }
+
+            async findOrCreateGist() {
+                // Buscar gists existentes
+                const response = await fetch('https://api.github.com/gists', {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
+                });
+                
+                const gists = await response.json();
+                const appGist = gists.find(gist => gist.description === 'Late Base Coffee Data');
+                
+                if (appGist) {
+                    this.gistId = appGist.id;
+                    localStorage.setItem('github_gist_id', appGist.id);
+                } else {
+                    await this.createGist();
                 }
             }
 
-            disconnect() {
-                this.config.token = null;
-                this.isConnected = false;
-                this.saveConfig();
-                this.showNotification('Desconectado de GitHub', 'info');
+            async createGist() {
+                const response = await fetch('https://api.github.com/gists', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${this.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description: 'Late Base Coffee Data',
+                        public: false,
+                        files: {
+                            'data.json': {
+                                content: JSON.stringify({ distributors: [], coffees: [] })
+                            }
+                        }
+                    })
+                });
+                
+                const gist = await response.json();
+                this.gistId = gist.id;
+                localStorage.setItem('github_gist_id', gist.id);
             }
 
             async saveData(data) {
-                if (!this.isConnected) {
+                if (!this.isConnected || !this.gistId) {
                     this.showNotification('No conectado a GitHub', 'error');
                     return false;
                 }
@@ -1394,65 +1406,40 @@
                 this.showSyncingStatus();
                 
                 try {
-                    const url = `https://api.github.com/repos/${this.config.username}/${this.config.repo}/contents/${this.config.file}`;
-                    
-                    // Primero, intentamos obtener el archivo existente para obtener su SHA
-                    let sha = null;
-                    try {
-                        const response = await fetch(url, {
-                            headers: {
-                                'Authorization': `token ${this.config.token}`,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            const fileData = await response.json();
-                            sha = fileData.sha;
-                        }
-                    } catch (e) {
-                        console.log('Archivo no existe o no se puede acceder, se creará uno nuevo');
-                    }
-                    
-                    // Preparar el contenido para GitHub
-                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-                    const message = `Actualización de datos desde Late Base: ${new Date().toLocaleString()}`;
-                    
-                    const putResponse = await fetch(url, {
-                        method: 'PUT',
+                    const response = await fetch(`https://api.github.com/gists/${this.gistId}`, {
+                        method: 'PATCH',
                         headers: {
-                            'Authorization': `token ${this.config.token}`,
-                            'Accept': 'application/vnd.github.v3+json',
+                            'Authorization': `token ${this.token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: message,
-                            content: content,
-                            sha: sha
+                            files: {
+                                'data.json': {
+                                    content: JSON.stringify(data)
+                                }
+                            }
                         })
                     });
                     
-                    if (putResponse.ok) {
+                    if (response.ok) {
                         this.showSyncedStatus();
-                        this.showNotification('Datos guardados en GitHub correctamente', 'success');
+                        this.showNotification('Datos guardados en GitHub', 'success');
                         return true;
                     } else {
-                        const errorText = await putResponse.text();
-                        console.error('Error al guardar en GitHub:', errorText);
                         this.showErrorStatus();
                         this.showNotification('Error al guardar en GitHub', 'error');
                         return false;
                     }
                 } catch (error) {
-                    console.error('Error al guardar en GitHub:', error);
+                    console.error('Error saving data to GitHub:', error);
                     this.showErrorStatus();
-                    this.showNotification(`Error de conexión con GitHub: ${error.message}`, 'error');
+                    this.showNotification('Error de conexión con GitHub', 'error');
                     return false;
                 }
             }
 
             async loadData() {
-                if (!this.isConnected) {
+                if (!this.isConnected || !this.gistId) {
                     this.showNotification('No conectado a GitHub', 'error');
                     return null;
                 }
@@ -1460,33 +1447,54 @@
                 this.showSyncingStatus();
                 
                 try {
-                    const url = `https://api.github.com/repos/${this.config.username}/${this.config.repo}/contents/${this.config.file}`;
-                    
-                    const response = await fetch(url, {
+                    const response = await fetch(`https://api.github.com/gists/${this.gistId}`, {
                         headers: {
-                            'Authorization': `token ${this.config.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
+                            'Authorization': `token ${this.token}`
                         }
                     });
                     
-                    if (response.ok) {
-                        const data = await response.json();
-                        const content = decodeURIComponent(escape(atob(data.content)));
-                        this.showSyncedStatus();
-                        this.showNotification('Datos cargados desde GitHub', 'success');
-                        return JSON.parse(content);
-                    } else {
-                        const errorText = await response.text();
-                        console.error('Error al cargar desde GitHub:', errorText);
-                        this.showErrorStatus();
-                        this.showNotification('Error al cargar desde GitHub', 'error');
-                        return null;
-                    }
+                    const gist = await response.json();
+                    const data = JSON.parse(gist.files['data.json'].content);
+                    
+                    this.showSyncedStatus();
+                    this.showNotification('Datos cargados desde GitHub', 'success');
+                    return data;
                 } catch (error) {
-                    console.error('Error al cargar desde GitHub:', error);
+                    console.error('Error loading data from GitHub:', error);
                     this.showErrorStatus();
-                    this.showNotification(`Error de conexión con GitHub: ${error.message}`, 'error');
+                    this.showNotification('Error al cargar desde GitHub', 'error');
                     return null;
+                }
+            }
+
+            disconnect() {
+                this.token = null;
+                this.gistId = null;
+                this.isConnected = false;
+                localStorage.removeItem('github_token');
+                localStorage.removeItem('github_gist_id');
+                this.updateUI();
+                this.showNotification('Desconectado de GitHub', 'info');
+            }
+
+            updateUI() {
+                const statusIndicator = document.getElementById('githubStatusIndicator');
+                const statusText = document.getElementById('githubStatusText');
+                const connectBtn = document.getElementById('connectGitHubBtn');
+                const disconnectBtn = document.getElementById('disconnectGitHubBtn');
+                const tokenInput = document.getElementById('githubToken');
+                
+                if (this.isConnected) {
+                    statusIndicator.className = 'status-indicator status-connected';
+                    statusText.textContent = 'Conectado';
+                    connectBtn.style.display = 'none';
+                    disconnectBtn.style.display = 'block';
+                    tokenInput.value = '';
+                } else {
+                    statusIndicator.className = 'status-indicator status-disconnected';
+                    statusText.textContent = 'Desconectado';
+                    connectBtn.style.display = 'block';
+                    disconnectBtn.style.display = 'none';
                 }
             }
 
@@ -1518,28 +1526,10 @@
             }
 
             showNotification(message, type) {
-                // Crear notificación visual
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                notification.innerHTML = `
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Mostrar notificación
-                setTimeout(() => {
-                    notification.classList.add('show');
-                }, 10);
-                
-                // Ocultar y eliminar después de 5 segundos
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 5000);
+                // Crear notificación (podría implementarse con un sistema más elaborado)
+                console.log(`${type}: ${message}`);
+                // En una implementación real, mostraría una notificación visual al usuario
+                alert(`${type.toUpperCase()}: ${message}`);
             }
         }
 
@@ -1572,6 +1562,38 @@
             
             // Aplicar tema guardado
             applySavedTheme();
+            
+            // Configurar event listeners para los sliders de SCA
+            setupSCASliders();
+        }
+
+        function setupSCASliders() {
+            // Configurar los sliders de evaluación SCA
+            const sliders = document.querySelectorAll('.range-slider');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', updateSCAScore);
+            });
+        }
+
+        function updateSCAScore() {
+            // Calcular la puntuación SCA basada en los sliders
+            const fragrance = parseFloat(document.getElementById('coffeeFragrance').value) || 5;
+            const flavor = parseFloat(document.getElementById('coffeeFlavor').value) || 5;
+            const aftertaste = parseFloat(document.getElementById('coffeeAftertaste').value) || 5;
+            const acidity = parseFloat(document.getElementById('coffeeAcidity').value) || 5;
+            const body = parseFloat(document.getElementById('coffeeBody').value) || 5;
+            const balance = parseFloat(document.getElementById('coffeeBalance').value) || 5;
+            const sweetness = parseFloat(document.getElementById('coffeeSweetness').value) || 5;
+            const cleanliness = parseFloat(document.getElementById('coffeeCleanliness').value) || 5;
+            const uniformity = parseFloat(document.getElementById('coffeeUniformity').value) || 5;
+            
+            // Calcular puntuación total (máximo 100 puntos)
+            const totalScore = (fragrance + flavor + aftertaste + acidity + body + 
+                               balance + sweetness + cleanliness + uniformity) * 1.11;
+            
+            // Actualizar la interfaz
+            document.getElementById('scaScoreValue').textContent = totalScore.toFixed(1);
+            document.getElementById('scaScoreFill').style.width = `${totalScore}%`;
         }
 
         function loadInitialData() {
@@ -1601,7 +1623,7 @@
                             contact: "María González",
                             email: "maria@cafesselectos.com",
                             phone: "+34 912 345 678",
-                            region: "norte",
+                            location: "Medellín, Antioquia, Colombia",
                             coffees: [1, 2]
                         },
                         {
@@ -1610,7 +1632,7 @@
                             contact: "Carlos Martínez",
                             email: "carlos@dorensa.com",
                             phone: "+34 913 456 789",
-                            region: "sur",
+                            location: "Oaxaca, Oaxaca, México",
                             coffees: [3]
                         }
                     ];
@@ -1619,26 +1641,68 @@
                         {
                             id: 1,
                             name: "Ethiopian Yirgacheffe",
-                            type: "arabica",
-                            origin: "Etiopía",
-                            score: 4.8,
-                            distributor: 1
+                            variety: "Heirloom",
+                            process: "lavado",
+                            altitude: 2100,
+                            region: "Yirgacheffe",
+                            producer: "Smallholder Farmers",
+                            harvest: "2024-03",
+                            distributor: 1,
+                            fragrance: 8.5,
+                            flavor: 9.0,
+                            aftertaste: 8.5,
+                            acidity: 9.0,
+                            body: 8.0,
+                            balance: 8.5,
+                            sweetness: 8.5,
+                            cleanliness: 9.0,
+                            uniformity: 8.5,
+                            score: 87.5,
+                            notes: "Notas florales, cítricos, té"
                         },
                         {
                             id: 2,
                             name: "Colombian Supremo",
-                            type: "arabica",
-                            origin: "Colombia",
-                            score: 4.5,
-                            distributor: 1
+                            variety: "Castillo",
+                            process: "lavado",
+                            altitude: 1600,
+                            region: "Huila",
+                            producer: "Hacienda Santa María",
+                            harvest: "2024-02",
+                            distributor: 1,
+                            fragrance: 8.0,
+                            flavor: 8.5,
+                            aftertaste: 8.0,
+                            acidity: 8.0,
+                            body: 8.5,
+                            balance: 8.5,
+                            sweetness: 8.0,
+                            cleanliness: 8.5,
+                            uniformity: 8.5,
+                            score: 84.5,
+                            notes: "Chocolate, nueces, caramelo"
                         },
                         {
                             id: 3,
-                            name: "Vietnam Dark Roast",
-                            type: "robusta",
-                            origin: "Vietnam",
-                            score: 4.2,
-                            distributor: 2
+                            name: "Mexico Chiapas Organic",
+                            variety: "Bourbon",
+                            process: "natural",
+                            altitude: 1400,
+                            region: "Chiapas",
+                            producer: "Unión Majomut",
+                            harvest: "2024-01",
+                            distributor: 2,
+                            fragrance: 7.5,
+                            flavor: 8.0,
+                            aftertaste: 7.5,
+                            acidity: 7.0,
+                            body: 8.0,
+                            balance: 7.5,
+                            sweetness: 8.0,
+                            cleanliness: 7.5,
+                            uniformity: 7.5,
+                            score: 78.5,
+                            notes: "Frutos secos, cacao, especias dulces"
                         }
                     ];
                 }
@@ -1665,11 +1729,6 @@
             document.getElementById('connectGitHubBtn').addEventListener('click', connectToGitHub);
             document.getElementById('disconnectGitHubBtn').addEventListener('click', disconnectFromGitHub);
             document.getElementById('syncDataBtn').addEventListener('click', syncData);
-            document.getElementById('syncNowBtn').addEventListener('click', syncData);
-            document.getElementById('configureGithubBtn').addEventListener('click', showGithubConfigModal);
-            
-            // Modal GitHub
-            document.getElementById('saveGithubConfigBtn').addEventListener('click', saveGithubConfigFromModal);
             
             // Modal distributors
             document.getElementById('addDistributorBtn').addEventListener('click', () => {
@@ -1733,48 +1792,14 @@
             state.currentView = tabName;
         }
 
-        function showGithubConfigModal() {
-            const modal = document.getElementById('githubConfigModal');
-            const tokenInput = document.getElementById('modalGithubToken');
-            const usernameInput = document.getElementById('modalGithubUsername');
-            const repoInput = document.getElementById('modalGithubRepo');
-            const fileInput = document.getElementById('modalGithubFile');
-            
-            tokenInput.value = githubService.config.token || '';
-            usernameInput.value = githubService.config.username || '';
-            repoInput.value = githubService.config.repo || '';
-            fileInput.value = githubService.config.file || 'data.json';
-            
-            modal.style.display = 'flex';
-        }
-
-        function saveGithubConfigFromModal() {
-            const token = document.getElementById('modalGithubToken').value.trim();
-            const username = document.getElementById('modalGithubUsername').value.trim();
-            const repo = document.getElementById('modalGithubRepo').value.trim();
-            const file = document.getElementById('modalGithubFile').value.trim();
-            
-            if (!token || !username || !repo) {
-                githubService.showNotification('Por favor, completa todos los campos requeridos', 'error');
-                return;
-            }
-            
-            githubService.connect(token, username, repo, file);
-            closeModals();
-        }
-
         function connectToGitHub() {
             const token = document.getElementById('githubToken').value.trim();
-            const username = document.getElementById('githubUsername').value.trim();
-            const repo = document.getElementById('githubRepo').value.trim();
-            const file = document.getElementById('githubFile').value.trim();
-            
-            if (!token || !username || !repo) {
-                githubService.showNotification('Por favor, completa todos los campos requeridos', 'error');
+            if (!token) {
+                alert('Por favor, introduce un token de GitHub');
                 return;
             }
             
-            githubService.connect(token, username, repo, file);
+            githubService.connect(token);
         }
 
         function disconnectFromGitHub() {
@@ -1808,7 +1833,7 @@
                         <div class="card-subtitle">
                             <i class="fas fa-user"></i> ${distributor.contact}
                         </div>
-                        <span class="card-badge">${distributor.region}</span>
+                        <span class="card-badge">${distributor.location}</span>
                     </div>
                     <div class="card-body">
                         <div class="card-details">
@@ -1876,29 +1901,45 @@
                     <div class="card-header">
                         <h3 class="card-title">${coffee.name}</h3>
                         <div class="card-subtitle">
-                            <i class="fas fa-globe-americas"></i> ${coffee.origin}
+                            <i class="fas fa-globe-americas"></i> ${coffee.region || 'N/A'}
                         </div>
-                        <span class="card-badge">${coffee.type}</span>
+                        <span class="card-badge">${coffee.variety || 'N/A'}</span>
                     </div>
                     <div class="card-body">
                         <div class="card-details">
                             <div class="card-detail">
-                                <span class="detail-label">Tipo</span>
-                                <span class="detail-value">${coffee.type}</span>
+                                <span class="detail-label">Variedad</span>
+                                <span class="detail-value">${coffee.variety || 'N/A'}</span>
                             </div>
                             <div class="card-detail">
-                                <span class="detail-label">Origen</span>
-                                <span class="detail-value">${coffee.origin}</span>
+                                <span class="detail-label">Proceso</span>
+                                <span class="detail-value">${coffee.process || 'N/A'}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">Altitud</span>
+                                <span class="detail-value">${coffee.altitude ? coffee.altitude + ' msnm' : 'N/A'}</span>
                             </div>
                             <div class="card-detail">
                                 <span class="detail-label">Distribuidor</span>
                                 <span class="detail-value">${distributorName}</span>
                             </div>
                             <div class="card-detail">
-                                <span class="detail-label">Puntuación</span>
-                                <span class="detail-value">${coffee.score} <i class="fas fa-star" style="color: var(--accent);"></i></span>
+                                <span class="detail-label">Puntuación SCA</span>
+                                <span class="detail-value">${coffee.score || 'N/A'} <i class="fas fa-star" style="color: var(--accent);"></i></span>
                             </div>
                         </div>
+                        ${coffee.notes ? `
+                        <div class="coffees-list">
+                            <div class="coffees-title">
+                                <i class="fas fa-sticky-note"></i> Notas de cata
+                            </div>
+                            <div class="coffee-items">
+                                <div class="coffee-item">
+                                    <span class="coffee-name">${coffee.notes}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
                     <div class="card-footer">
                         <button class="btn btn-secondary btn-sm" onclick="editCoffee(${coffee.id})">
@@ -1926,7 +1967,7 @@
                 document.getElementById('distributorContact').value = distributor.contact;
                 document.getElementById('distributorEmail').value = distributor.email;
                 document.getElementById('distributorPhone').value = distributor.phone || '';
-                document.getElementById('distributorRegion').value = distributor.region;
+                document.getElementById('distributorLocation').value = distributor.location || '';
             } else {
                 title.textContent = 'Nuevo Distribuidor';
                 form.reset();
@@ -1952,14 +1993,39 @@
                 title.textContent = 'Editar Café';
                 document.getElementById('coffeeId').value = coffee.id;
                 document.getElementById('coffeeName').value = coffee.name;
-                document.getElementById('coffeeType').value = coffee.type;
-                document.getElementById('coffeeOrigin').value = coffee.origin;
-                document.getElementById('coffeeScore').value = coffee.score;
-                document.getElementById('coffeeDistributor').value = coffee.distributor;
+                document.getElementById('coffeeVariety').value = coffee.variety || '';
+                document.getElementById('coffeeProcess').value = coffee.process || '';
+                document.getElementById('coffeeAltitude').value = coffee.altitude || '';
+                document.getElementById('coffeeRegion').value = coffee.region || '';
+                document.getElementById('coffeeProducer').value = coffee.producer || '';
+                document.getElementById('coffeeHarvest').value = coffee.harvest || '';
+                document.getElementById('coffeeDistributor').value = coffee.distributor || '';
+                document.getElementById('coffeeFragrance').value = coffee.fragrance || 5;
+                document.getElementById('coffeeFlavor').value = coffee.flavor || 5;
+                document.getElementById('coffeeAftertaste').value = coffee.aftertaste || 5;
+                document.getElementById('coffeeAcidity').value = coffee.acidity || 5;
+                document.getElementById('coffeeBody').value = coffee.body || 5;
+                document.getElementById('coffeeBalance').value = coffee.balance || 5;
+                document.getElementById('coffeeSweetness').value = coffee.sweetness || 5;
+                document.getElementById('coffeeCleanliness').value = coffee.cleanliness || 5;
+                document.getElementById('coffeeUniformity').value = coffee.uniformity || 5;
+                document.getElementById('coffeeNotes').value = coffee.notes || '';
+                
+                // Actualizar puntuación
+                updateSCAScore();
             } else {
                 title.textContent = 'Nuevo Café';
                 form.reset();
                 document.getElementById('coffeeId').value = '';
+                
+                // Establecer valores por defecto para los sliders
+                const sliders = document.querySelectorAll('.range-slider');
+                sliders.forEach(slider => {
+                    slider.value = 5;
+                });
+                
+                // Actualizar puntuación
+                updateSCAScore();
             }
             
             modal.style.display = 'flex';
@@ -1979,7 +2045,7 @@
             const contact = document.getElementById('distributorContact').value;
             const email = document.getElementById('distributorEmail').value;
             const phone = document.getElementById('distributorPhone').value;
-            const region = document.getElementById('distributorRegion').value;
+            const location = document.getElementById('distributorLocation').value;
             
             const distributor = {
                 id: id ? parseInt(id) : Math.max(0, ...state.distributors.map(d => d.id)) + 1,
@@ -1987,7 +2053,7 @@
                 contact,
                 email,
                 phone,
-                region,
+                location,
                 coffees: id ? state.distributors.find(d => d.id === parseInt(id)).coffees : []
             };
             
@@ -2013,18 +2079,49 @@
             
             const id = document.getElementById('coffeeId').value;
             const name = document.getElementById('coffeeName').value;
-            const type = document.getElementById('coffeeType').value;
-            const origin = document.getElementById('coffeeOrigin').value;
-            const score = parseFloat(document.getElementById('coffeeScore').value);
+            const variety = document.getElementById('coffeeVariety').value;
+            const process = document.getElementById('coffeeProcess').value;
+            const altitude = document.getElementById('coffeeAltitude').value ? parseInt(document.getElementById('coffeeAltitude').value) : null;
+            const region = document.getElementById('coffeeRegion').value;
+            const producer = document.getElementById('coffeeProducer').value;
+            const harvest = document.getElementById('coffeeHarvest').value;
             const distributor = parseInt(document.getElementById('coffeeDistributor').value);
+            const fragrance = parseFloat(document.getElementById('coffeeFragrance').value);
+            const flavor = parseFloat(document.getElementById('coffeeFlavor').value);
+            const aftertaste = parseFloat(document.getElementById('coffeeAftertaste').value);
+            const acidity = parseFloat(document.getElementById('coffeeAcidity').value);
+            const body = parseFloat(document.getElementById('coffeeBody').value);
+            const balance = parseFloat(document.getElementById('coffeeBalance').value);
+            const sweetness = parseFloat(document.getElementById('coffeeSweetness').value);
+            const cleanliness = parseFloat(document.getElementById('coffeeCleanliness').value);
+            const uniformity = parseFloat(document.getElementById('coffeeUniformity').value);
+            const notes = document.getElementById('coffeeNotes').value;
+            
+            // Calcular puntuación total
+            const totalScore = (fragrance + flavor + aftertaste + acidity + body + 
+                               balance + sweetness + cleanliness + uniformity) * 1.11;
             
             const coffee = {
                 id: id ? parseInt(id) : Math.max(0, ...state.coffees.map(c => c.id)) + 1,
                 name,
-                type,
-                origin,
-                score,
-                distributor
+                variety,
+                process,
+                altitude,
+                region,
+                producer,
+                harvest,
+                distributor,
+                fragrance,
+                flavor,
+                aftertaste,
+                acidity,
+                body,
+                balance,
+                sweetness,
+                cleanliness,
+                uniformity,
+                score: parseFloat(totalScore.toFixed(1)),
+                notes
             };
             
             if (id) {
