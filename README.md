@@ -1,48 +1,36 @@
 # Late Base - Gestor de Distribuidores de Café
 
-Una aplicación web para gestionar distribuidores y variedades de café, con integración con GitHub para backup de datos.
+Una aplicación web moderna para gestionar distribuidores y cafés, con sincronización en la nube mediante GitHub Gists.
 
 ## Características
 
-- Gestión completa de distribuidores de café (CRUD)
-- Gestión de variedades de café con detalles específicos
-- Sistema de búsqueda integrado
-- Integración con GitHub para backup automático
-- Interfaz responsive y moderna
-- Diseño inspirado en jardines zen japoneses
+- Gestión de distribuidores y cafés
+- Interfaz moderna con modo claro y oscuro
+- Sincronización de datos con GitHub Gists
+- Diseño responsive compatible con dispositivos móviles
+- Persistencia de datos local y en la nube
 
-## Estructura de datos
+## Configuración
 
-### Distribuidores
-- id, nombre, país, región, contacto, descripción
+1. **Acceso a la aplicación**: 
+   - La aplicación está disponible en [GitHub Pages](https://[tu-usuario].github.io/late-base) o puedes clonar el repositorio y abrir `index.html` en tu navegador.
 
-### Cafés
-- id, distributorId, nombre, origen, altitud, variedad, proceso, nivel de tostión, puntuación SCA, notas de cata, precios (250g, 500g, 1kg)
+2. **Conexión con GitHub**:
+   - Para habilitar la sincronización, necesitas un token de acceso personal de GitHub.
+   - Ve a [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens) y genera un nuevo token.
+   - Selecciona el alcance (scope) "gist" para permitir la gestión de Gists.
+   - En la aplicación, ve a la pestaña "GitHub", introduce tu token y haz clic en "Conectar".
 
-## Configuración de GitHub
-
-Para utilizar la sincronización con GitHub:
-
-1. Crear un token de acceso personal en GitHub con permisos de repositorio
-2. Configurar los datos de conexión en la pestaña "Configuración GitHub"
-   - Usuario: keyarturo10-rgb (preconfigurado)
-   - Repositorio: latebase-project (preconfigurado)
-   - Rama: main (preconfigurado)
-   - Token: [tu token personal]
-3. Probar la conexión con el botón "Probar conexión"
-4. Activar la sincronización automática si se desea
-
-## Instalación
-
-1. Clonar el repositorio
-2. Abrir el archivo index.html en un navegador web
+3. **Uso**:
+   - Una vez conectado, todos los cambios se guardarán automáticamente en un Gist privado de tu cuenta.
+   - Puedes acceder a tus datos desde cualquier dispositivo conectando la misma cuenta de GitHub.
 
 ## Tecnologías utilizadas
 
-- HTML5 semántico
-- CSS3 con variables CSS
-- JavaScript ES6+
-- LocalStorage para persistencia
+- HTML5, CSS3, JavaScript (ES6+)
 - GitHub API para sincronización
+- LocalStorage para persistencia local
+- Diseño responsive con Grid y Flexbox
+- Iconos de FontAwesome y fuentes de Google Fonts
 
-## Estructura de archivos
+## Estructura del proyecto
